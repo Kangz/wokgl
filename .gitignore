@@ -1,0 +1,11 @@
+#Hide cmake things
+CMakeCache.txt
+CMakeFiles/*
+cmake_install.cmake
+Makefile
+
+#Hide some other directories
+bin/*
+data/*
+extlibs/*
+include/*
