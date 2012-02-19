@@ -1,7 +1,6 @@
 #ifndef RENDERER_ACTIVETEXTUREMANAGER_HPP
 #define RENDERER_ACTIVETEXTUREMANAGER_HPP
 
-#include <GL/glew.h>
 #include "Texture.hpp"
 
 namespace renderer{

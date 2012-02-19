@@ -13,7 +13,7 @@ class Buffer{
         ~Buffer();
 
         Buffer& bind();
-        //this depends on glm being storing vectors in the right way
+        //this depends on glm storing vectors in the right way
         Buffer& feed(int size, const float* data);
         Buffer& feed(int size, const glm::vec2* data);
         Buffer& feed(int size, const glm::vec3* data);

@@ -1,3 +1,5 @@
+#include <glm/gtc/type_ptr.hpp>
+
 #include "ShaderProgram.hpp"
 
 namespace renderer{

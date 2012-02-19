@@ -1,3 +1,5 @@
+#include <GL/glew.h>
+
 #include "ActiveTextureManager.hpp"
 
 namespace renderer{

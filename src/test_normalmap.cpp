@@ -52,7 +52,7 @@ void run(SDL_WindowID window){
         tex.quickFileLoad("data/floor2c.bmp");
         tex_normal.quickFileLoad("data/floor2c_nm.bmp");
         program.attach(vs).attach(fs).link().bindAttrib(0, "in_Position").use();
-               
+
     }catch(string error){
         cout << error << "\n" << endl;
     }
