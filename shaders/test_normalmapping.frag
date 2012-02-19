@@ -15,6 +15,6 @@ void main(void) {
     float ambientCoeff = max(0.0, dot(normalize(lightdir), normal));
     float attenuation = min(10000.0, dot(lightdir, lightdir));
     
-    gl_FragColor = color / attenuation * ambientCoeff;// / attenuation;
- //   gl_FragColor = vec4(position, 1.0);
+    //gl_FragData[1] = color / attenuation * ambientCoeff;
+    gl_FragColor = vec4(position, 1.0);
 }

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 
 project(renderer)
 
@@ -25,12 +25,27 @@ add_executable(
     ${renderer_sources}
 )
 
+add_executable(
+    test_framebuffer
+    src/test_framebuffer.cpp
+    ${renderer_sources}
+)
+
+
 target_link_libraries(
 	test_normalmap
 	SDL
 	GLEW
 	GL
 )
+
+target_link_libraries(
+	test_framebuffer
+	SDL
+	GLEW
+	GL
+)
+
 
 #g++ -c include/glm/glm.hpp #Compiles glm
 
