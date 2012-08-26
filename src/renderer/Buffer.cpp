@@ -55,15 +55,15 @@ Buffer& Buffer::feed(int size, const glm::vec4* data){
 
 GLuint Buffer::getDataType(){
     return _dataType;
-};
+}
 
 int Buffer::getDataSize(){
     return _dataSize;
-};
+}
 
 GLuint Buffer::getHandle(){
     return _handle;
-};
+}
 
 Buffer::operator GLuint(){
     return _handle;

@@ -41,11 +41,13 @@ Shader& Shader::load(const std::string& source){
 
        throw "Shader Compilation failed :\n" + infoLog;
     }
+
+    return *this;
 }
 
 GLuint Shader::getHandle(){
     return _handle;
-};
+}
 
 Shader::operator GLuint(){
     return _handle;

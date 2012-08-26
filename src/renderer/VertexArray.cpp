@@ -24,7 +24,7 @@ VertexArray& VertexArray::setAttribute(int attribute, Buffer& buf){
 
 GLuint VertexArray::getHandle(){
     return _handle;
-};
+}
 
 VertexArray::operator GLuint(){
     return _handle;

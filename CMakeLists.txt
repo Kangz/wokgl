@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(renderer)
 
-SET(CMAKE_CXX_FLAGS "-g -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable")
+#GLM has triggers the long-long warning
+SET(CMAKE_CXX_FLAGS "-g -Wall -Wextra -pedantic -Wno-long-long -Wno-unused-parameter -Wno-unused-variable")
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
@@ -53,11 +54,3 @@ target_link_libraries(
     pthread
     dl
 )
-
-
-#g++ -c include/glm/glm.hpp #Compiles glm
-
-
-#g++ -Iinclude/SDL -Iinclude -D_GNU_SOURCE=1 -D_REENTRANT -c test.cpp
-#g++ -Lextlibs -o test test.o -lSDL -lGLEW -lGL
-

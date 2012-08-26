@@ -86,7 +86,7 @@ int Texture::getLastTextureUnit(){
 
 GLuint Texture::getHandle(){
     return _handle;
-};
+}
 
 Texture::operator GLuint(){
     return _handle;

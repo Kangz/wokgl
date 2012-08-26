@@ -120,7 +120,7 @@ ShaderProgram& ShaderProgram::uni(const std::string& uniName, Texture& tex){
 
 GLuint ShaderProgram::getHandle(){
     return _handle;
-};
+}
 
 ShaderProgram::operator GLuint(){
     return _handle;

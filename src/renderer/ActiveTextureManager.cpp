@@ -11,7 +11,7 @@ ActiveTextureManager& ActiveTextureManager::getInstance(){
     return *_instance;
 }
 
-ActiveTextureManager::ActiveTextureManager(): _count(0), _activeUnit(0){
+ActiveTextureManager::ActiveTextureManager(): _activeUnit(0), _count(0){
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &_nTexUnits);
     _lastBoundTime = new int[_nTexUnits];
     _boundTexture = new Texture*[_nTexUnits];

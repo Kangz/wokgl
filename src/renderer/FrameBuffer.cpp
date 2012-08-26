@@ -8,6 +8,7 @@ FrameBuffer::FrameBuffer(int width, int height): _width(width), _height(height){
 
 FrameBuffer& FrameBuffer::bind(){
     glBindFramebuffer(GL_FRAMEBUFFER, _handle);
+    return *this;
 }
 
 FrameBuffer& FrameBuffer::attach(int target, Texture& tex){
@@ -56,7 +57,7 @@ FrameBuffer& FrameBuffer::attachColor(int colorNum, Texture& tex){
 
 GLuint FrameBuffer::getHandle(){
     return _handle;
-};
+}
 
 FrameBuffer::operator GLuint(){
     return _handle;
