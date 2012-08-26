@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project(renderer)
 
+SET(CMAKE_CXX_FLAGS "-g -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable")
+
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
 include_directories(
@@ -34,16 +36,22 @@ add_executable(
 
 target_link_libraries(
 	test_normalmap
-	SDL
+	SDL2
+	SDL2_image
+    pthread
+    dl
 	GLEW
 	GL
 )
 
 target_link_libraries(
 	test_framebuffer
-	SDL
+	SDL2
+	SDL2_image
 	GLEW
 	GL
+    pthread
+    dl
 )
 
 
