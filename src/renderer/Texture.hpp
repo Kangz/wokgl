@@ -4,6 +4,7 @@
 #include <string>
 #include <GL/glew.h>
 #include <SDL.h>
+#include <SDL_image.h>
 
 //Should I move it inside Texture.cpp ?
 #include "ActiveTextureManager.hpp"
@@ -18,7 +19,7 @@ class Texture{ //TODO Change this to Texture2D sometime
         int activate();
         Texture& bind();
         Texture& emptyData(int width, int height);
-        Texture& loadSurface(const SDL_Surface& surface);
+        Texture& loadSurface(SDL_Surface* surface);
         Texture& quickFileLoad(const std::string& filename);
         int getLastTextureUnit();
 
