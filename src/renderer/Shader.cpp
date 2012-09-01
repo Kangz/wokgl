@@ -1,13 +1,14 @@
 #include "Shader.hpp"
+#include <GL/glew.h>
 
 namespace renderer{
 
-Shader::Shader(int type): _type(type){
-    _handle = glCreateShader(_type);
+Shader::Shader(ShaderType type): _type(type){
+    _handle = glCreateShader(static_cast<int>(_type));
 }
 
-Shader::Shader(int type, const std::string& source): _type(type){ //TODO: make a typedef for the shadertype
-    _handle = glCreateShader(_type);
+Shader::Shader(ShaderType type, const std::string& source): _type(type){ //TODO: make a typedef for the shadertype
+    _handle = glCreateShader(static_cast<int>(_type));
     load(source);
 }
 
