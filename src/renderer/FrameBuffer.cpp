@@ -13,35 +13,35 @@ FrameBuffer& FrameBuffer::bind(){
 
 FrameBuffer& FrameBuffer::attach(int target, Texture& tex){
     this->bind();
-    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, target, GL_TEXTURE_2D, tex, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, target, GL_TEXTURE_2D, tex, 0);
     return *this;
 }
 
 FrameBuffer& FrameBuffer::checkStatus(){ //Thanks r5ge
     this->bind();
     switch(glCheckFramebufferStatus(GL_FRAMEBUFFER)){
-        case GL_FRAMEBUFFER_COMPLETE_EXT:
+        case GL_FRAMEBUFFER_COMPLETE:
             return *this;
 
-        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
+        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
             throw "Some FrameBuffer attachment are incomplete";
 
-        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
+        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
             throw "This FrameBuffer has no attachement";
 
         case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
             throw "The attachments do not all have the same dimension";
 
-        case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
+        case GL_FRAMEBUFFER_UNSUPPORTED:
             throw "Your hardware does not suport this combination of attachments";
 
-        case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT:
+        case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
             throw "You should call 'glDrawBuffers'"; //WTF is this
 
         case GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT:
             throw "Attachment formats are not coherent";
 
-        case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT:
+        case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
             throw "Incomplete read buffer. Did you attach a depth with no color? (Mac issue)"; //TY r5ge here too
 
         default:
