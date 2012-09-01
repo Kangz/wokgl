@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(renderer)
 
 #GLM has triggers the long-long warning
-SET(CMAKE_CXX_FLAGS "-g -Wall -Wextra -pedantic -Wno-long-long -Wno-unused-parameter -Wno-unused-variable")
+SET(CMAKE_CXX_FLAGS "-g -Wall -std=c++11 -Wextra -pedantic -Wno-long-long -Wno-unused-parameter -Wno-unused-variable")
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 
