@@ -10,6 +10,11 @@ enum class ShaderType {
     VertexShader = GL_VERTEX_SHADER,
 };
 
+enum class TextureFilter {
+    Nearest = GL_NEAREST,
+    Linear = GL_LINEAR,
+};
+
 enum class TextureFormat {
    RGBA = GL_RGBA,
 
@@ -24,6 +29,12 @@ enum class TextureFormat {
    RG32F = GL_RG32F,
    RGB32F = GL_RGB32F,
    RGBA32F = GL_RGBA32F,
+};
+
+enum class TextureWrap {
+    Clamp = GL_CLAMP_TO_EDGE,
+    Repeat = GL_REPEAT,
+    MirroredRepeat = GL_MIRRORED_REPEAT,
 };
 
 }

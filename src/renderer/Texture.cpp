@@ -19,6 +19,7 @@ int Texture::activate(){
     return _texUnit;
 }
 
+//TODO check it is not already bound
 Texture& Texture::bind(){
 	glBindTexture(GL_TEXTURE_2D, _handle);
     return *this;
@@ -50,13 +51,7 @@ Texture& Texture::loadSurface(SDL_Surface* surface){
     SDL_BlitSurface(surface, NULL, convertedSurface, NULL);
 
     //Upload the surface to the GPU
-    this->bind();
-
-    //FIXME move this somewhere else ?
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    this->bind().applyWrapAndFilter();
  
     glTexImage2D(GL_TEXTURE_2D, 0, static_cast<int>(_format), w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,
             convertedSurface->pixels);
@@ -65,11 +60,9 @@ Texture& Texture::loadSurface(SDL_Surface* surface){
 }
 
 Texture& Texture::emptyData(int width, int height){
-    this->bind();
+    this->bind().applyWrapAndFilter();
 	glTexImage2D(GL_TEXTURE_2D, 0, static_cast<int>(_format), width, height, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, 0);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     return *this;
 }
 
@@ -86,6 +79,45 @@ Texture& Texture::quickFileLoad(const std::string& filename){
 
 int Texture::getLastTextureUnit(){
     return _texUnit;
+}
+
+Texture& Texture::setFilter(TextureFilter filter){
+    _magFilter = _minFilter = filter;
+    return *this;
+}
+
+Texture& Texture::setMagFilter(TextureFilter filter){
+    _magFilter = filter;
+    return *this;
+}
+
+Texture& Texture::setMinFilter(TextureFilter filter){
+    _minFilter = filter;
+    return *this;
+}
+
+Texture& Texture::setWrap(TextureWrap mode){
+    _wrapS = _wrapT = mode;
+    return *this;
+}
+
+Texture& Texture::setWrapS(TextureWrap mode){
+    _wrapS = mode;
+    return *this;
+}
+
+Texture& Texture::setWrapT(TextureWrap mode){
+    _wrapT = mode;
+    return *this;
+}
+
+Texture& Texture::applyWrapAndFilter(){
+    this->bind();
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<int>(_minFilter));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<int>(_magFilter));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<int>(_wrapS));
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<int>(_wrapT));
+    return *this;
 }
 
 GLuint Texture::getHandle(){

@@ -25,6 +25,14 @@ class Texture{ //TODO Change this to Texture2D sometime
         Texture& quickFileLoad(const std::string& filename);
         int getLastTextureUnit();
 
+        Texture& setFilter(TextureFilter filter);
+        Texture& setMagFilter(TextureFilter filter);
+        Texture& setMinFilter(TextureFilter filter);
+        Texture& setWrap(TextureWrap mode);
+        Texture& setWrapS(TextureWrap mode);
+        Texture& setWrapT(TextureWrap mode);
+        Texture& applyWrapAndFilter();
+
         GLuint getHandle();
         
         operator GLuint();
@@ -33,6 +41,10 @@ class Texture{ //TODO Change this to Texture2D sometime
         GLuint _handle;
         int _texUnit;
         TextureFormat _format;
+        TextureWrap _wrapS = TextureWrap::Repeat;
+        TextureWrap _wrapT = TextureWrap::Repeat;
+        TextureFilter _magFilter = TextureFilter::Linear;
+        TextureFilter _minFilter = TextureFilter::Linear;
 };
 
 }
