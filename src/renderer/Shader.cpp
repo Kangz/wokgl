@@ -7,7 +7,7 @@ Shader::Shader(ShaderType type): _type(type){
     _handle = glCreateShader(static_cast<int>(_type));
 }
 
-Shader::Shader(ShaderType type, const std::string& source): _type(type){ //TODO: make a typedef for the shadertype
+Shader::Shader(ShaderType type, const std::string& source): Shader(type){ //TODO: make a typedef for the shadertype
     _handle = glCreateShader(static_cast<int>(_type));
     load(source);
 }

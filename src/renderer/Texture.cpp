@@ -2,7 +2,10 @@
 
 namespace renderer{
 
-Texture::Texture(){
+Texture::Texture(): Texture(TextureFormat::RGBA){
+}
+
+Texture::Texture(TextureFormat format):_format(format){
     glGenTextures(1, &_handle);
     _texUnit = -1;
 }
@@ -55,7 +58,7 @@ Texture& Texture::loadSurface(SDL_Surface* surface){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
  
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+    glTexImage2D(GL_TEXTURE_2D, 0, static_cast<int>(_format), w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,
             convertedSurface->pixels);
     
     return *this;
@@ -63,7 +66,8 @@ Texture& Texture::loadSurface(SDL_Surface* surface){
 
 Texture& Texture::emptyData(int width, int height){
     this->bind();
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, static_cast<int>(_format), width, height, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
     return *this;
