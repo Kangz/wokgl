@@ -3,13 +3,14 @@
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
+#include "enums.hpp"
 
 namespace renderer{
 
 class Buffer{
     public:
-        Buffer(int bufferType, int usage);
-        template<typename T> Buffer(int bufferType, int usage, int size, const T* data);
+        Buffer(BufferTarget target, BufferUsage usage);
+        template<typename T> Buffer(BufferTarget target, BufferUsage usage, int size, const T* data);
         ~Buffer();
 
         Buffer& bind();
@@ -28,20 +29,28 @@ class Buffer{
 
     private:
         GLuint _handle;
-        int _usage;
-        int _bufferType;
+        BufferUsage _usage;
+        BufferTarget _target;
         GLuint _dataType;
         int _dataSize;
 };
 
 class ArrayBuffer: public Buffer{
     public:
-        ArrayBuffer(int usage): Buffer(GL_ARRAY_BUFFER, usage){}
-        template<typename T> ArrayBuffer(int usage, int size, const T* data)
-        :Buffer(GL_ARRAY_BUFFER, usage, size, data){}
+        ArrayBuffer(BufferUsage usage): Buffer(BufferTarget::Array, usage){}
+        template<typename T> ArrayBuffer(BufferUsage usage, int size, const T* data)
+        :Buffer(BufferTarget::Array, usage, size, data){}
 };
 
-template<typename T> Buffer::Buffer(int bufferType, int usage, int size, const T* data): Buffer(bufferType, usage){
+
+class ElementBuffer: public Buffer{
+    public:
+        ElementBuffer(BufferUsage usage): Buffer(BufferTarget::ElementArray, usage){}
+        template<typename T> ElementBuffer(BufferUsage usage, int size, const T* data)
+        :Buffer(BufferTarget::ElementArray, usage, size, data){}
+};
+
+template<typename T> Buffer::Buffer(BufferTarget target, BufferUsage usage, int size, const T* data): Buffer(target, usage){
     this->feed(size, data);
 }
 
