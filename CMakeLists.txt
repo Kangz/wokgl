@@ -37,10 +37,10 @@ add_executable(
     src/test_normalmap.cpp
 )
 
-add_executable(
-    test_framebuffer
-    src/test_framebuffer.cpp
-)
+#add_executable(
+#    test_framebuffer
+#    src/test_framebuffer.cpp
+#)
 
 target_link_libraries(
 	test_normalmap
@@ -50,10 +50,10 @@ target_link_libraries(
     renderer
 )
 
-target_link_libraries(
-	test_framebuffer
-	SDL2
-    pthread
-    dl
-    renderer
-)
+#target_link_libraries(
+#    test_framebuffer
+#    SDL2
+#    pthread
+#    dl
+#    renderer
+#)
