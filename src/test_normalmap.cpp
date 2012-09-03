@@ -89,7 +89,7 @@ void setupWindow(SDL_WindowID &window, SDL_GLContext &context){
     }
  
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
     window = SDL_CreateWindow("Awesome Renderer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
