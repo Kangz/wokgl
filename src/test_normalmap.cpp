@@ -37,7 +37,7 @@ void run(SDL_WindowID window){
     };
     
     VertexArray vao;
-    Buffer buf(GL_ARRAY_BUFFER, GL_STATIC_DRAW, 4, square);
+    ArrayBuffer buf(GL_STATIC_DRAW, 4, square);
     vao.setAttribute(0, buf).bind();
  
     ShaderProgram program;

@@ -9,7 +9,7 @@ namespace renderer{
 class Buffer{
     public:
         Buffer(int bufferType, int usage);
-        Buffer(int bufferType, int usage, int size, const glm::vec2* data);
+        template<typename T> Buffer(int bufferType, int usage, int size, const T* data);
         ~Buffer();
 
         Buffer& bind();
@@ -27,14 +27,23 @@ class Buffer{
         operator GLuint();
 
     private:
-        void initialise(int bufferType, int usage);
-        
         GLuint _handle;
         int _usage;
         int _bufferType;
         GLuint _dataType;
         int _dataSize;
 };
+
+class ArrayBuffer: public Buffer{
+    public:
+        ArrayBuffer(int usage): Buffer(GL_ARRAY_BUFFER, usage){}
+        template<typename T> ArrayBuffer(int usage, int size, const T* data)
+        :Buffer(GL_ARRAY_BUFFER, usage, size, data){}
+};
+
+template<typename T> Buffer::Buffer(int bufferType, int usage, int size, const T* data): Buffer(bufferType, usage){
+    this->feed(size, data);
+}
 
 }
 

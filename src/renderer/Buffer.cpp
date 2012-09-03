@@ -3,14 +3,10 @@
 namespace renderer{
 
 Buffer::Buffer(int bufferType, int usage){
-    this->initialise(bufferType, usage);
+    _bufferType = bufferType;
+    _usage = usage;
+    glGenBuffers(1, &_handle);
 }
-
-Buffer::Buffer(int bufferType, int usage, int size, const glm::vec2* data){
-    this->initialise(bufferType, usage);
-    this->feed(size, data);
-}
-
 
 Buffer::~Buffer(){
     glDeleteBuffers(1, &_handle);
@@ -67,12 +63,6 @@ GLuint Buffer::getHandle(){
 
 Buffer::operator GLuint(){
     return _handle;
-}
-
-void Buffer::initialise(int bufferType, int usage){
-    _bufferType = bufferType;
-    _usage = usage;
-    glGenBuffers(1, &_handle);
 }
 
 }
