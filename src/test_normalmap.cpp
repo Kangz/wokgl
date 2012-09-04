@@ -28,7 +28,7 @@ string loadFile(string filename){
     return result + str;
 }
 
-void run(SDL_WindowID window){
+void run(SDL_Window* window){
     const glm::vec2 square[4]={
         glm::vec2( 1.0,  1.0),
         glm::vec2( 1.0, -1.0),
@@ -83,22 +83,23 @@ void die(const string msg){
 
 
 //This is framework
-void setupWindow(SDL_WindowID &window, SDL_GLContext &context){
+void setupWindow(SDL_Window** window, SDL_GLContext* context){
     if(SDL_Init(SDL_INIT_VIDEO) < 0){
         die("Unable to initialize SDL");
     }
  
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    window = SDL_CreateWindow("Awesome Renderer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+    *window = SDL_CreateWindow("Awesome Renderer", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                 512, 512, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
     if (!window){
         die("Unable to create window");
     }
 
-    context = SDL_GL_CreateContext(window);
+    *context = SDL_GL_CreateContext(*window);
     if (glewInit() != GLEW_OK){
         die("Unable to initialize GLEW");
     }
@@ -108,19 +109,19 @@ void setupWindow(SDL_WindowID &window, SDL_GLContext &context){
     glEnable(GL_TEXTURE_2D);
 }
 
-void destroyWindow(SDL_WindowID &window, SDL_GLContext &context){
+void destroyWindow(SDL_Window* window, SDL_GLContext context){
     SDL_GL_DeleteContext(context);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
 
 int main(int argc, char *argv[]){
-    SDL_WindowID window;
+    SDL_Window* window;
     SDL_GLContext context;
-    setupWindow(window, context);
+    setupWindow(&window, &context);
 
     run(window);
  
-    destroyWindow(window, context);
+    destroyWindow(window, &context);
     return 0;
 }
