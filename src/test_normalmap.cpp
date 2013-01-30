@@ -7,6 +7,7 @@
 #include <glm/glm.hpp>
 
 #include "renderer/Buffer.hpp"
+#include "renderer/Debug.hpp"
 #include "renderer/Texture.hpp"
 #include "renderer/Shader.hpp"
 #include "renderer/ShaderProgram.hpp"
@@ -17,12 +18,12 @@ using namespace renderer;
 
 
 string loadFile(string filename){
- 	ifstream in(filename.c_str()); //Why do I have to put a char * ?
+    ifstream in(filename.c_str());
 
- 	string str, result;
- 	getline(in, str);
- 	while(in){
- 	    result += str + "\n";
+    string str, result;
+    getline(in, str);
+    while(in){
+        result += str + "\n";
         getline(in,str);
     }
     return result + str;
@@ -119,6 +120,15 @@ int main(int argc, char *argv[]){
     SDL_Window* window;
     SDL_GLContext context;
     setupWindow(&window, &context);
+
+    glewExperimental = GL_TRUE;
+    GLenum err = glewInit();
+    if(err != GLEW_OK){
+        std::cerr << "Error: " << glewGetErrorString(err) << std::endl;
+    }else{
+        std::cout << "GLEW init OK" << std::endl;
+    }
+    Debug::init();
 
     run(window);
  
