@@ -46,7 +46,7 @@ ShaderProgram& ShaderProgram::link(){
     int infoLogLength;
     char* cInfoLog;
     std::string infoLog;
-    glGetShaderiv(_handle, GL_LINK_STATUS, &linked);
+    glGetProgramiv(_handle, GL_LINK_STATUS, &linked);
  
     if(!linked){
        glGetShaderiv(_handle, GL_INFO_LOG_LENGTH, &infoLogLength);
