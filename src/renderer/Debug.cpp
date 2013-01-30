@@ -8,16 +8,24 @@ namespace renderer{
 namespace Debug{
 
 void callback(DebugSourceAPI source, DebugType type, int id, DebugSeverity severity, int length, const char* msg, void* userData){
-    std::cout << "Source: " << sourceAPIName(source) << " "; 
-    std::cout << "Type: " << typeName(type) << " "; 
-    std::cout << "Severity: " << severityName(severity) << " ";
-    std::cout << "Id: " << id << " ";
+    std::cout << "Source: " << sourceAPIName(source) << " -- ";
+    std::cout << "Type: " << typeName(type) << " -- ";
+    std::cout << "Severity: " << severityName(severity) << " -- ";
+    std::cout << "Id: " << id << " -- ";
     std::cout << "Message: " << msg;
     std::cout << std::endl;
 }
 
 void init(){
     glDebugMessageCallbackARB((GLDEBUGPROCARB)&callback, NULL);
+}
+
+void makeSynchronous(bool sync){
+    if(sync){
+        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
+    }else{
+        glDisable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
+    }
 }
 
 void Emit(DebugType type, DebugSeverity severity, int id, const std::string& msg){

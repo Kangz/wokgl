@@ -6,6 +6,7 @@ namespace renderer{
 
 namespace Debug{
     void init();
+    void makeSynchronous(bool sync = true);
 
     void Emit(DebugType type, DebugSeverity severity, int id, const std::string& msg);
 
