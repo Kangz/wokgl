@@ -5,6 +5,8 @@
 
 namespace renderer{
 
+//Buffer-related enums
+
 enum class BufferTarget{
     Array = GL_ARRAY_BUFFER,
     ElementArray = GL_ELEMENT_ARRAY_BUFFER,
@@ -24,10 +26,40 @@ enum class BufferUsage{
     DynamicCopy = GL_DYNAMIC_COPY,
 };
 
+//Debug-related enums
+
+enum class DebugType {
+    Error = GL_DEBUG_TYPE_ERROR_ARB,
+    DeprecatedBehavior = GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB,
+    UndefinedBehavior = GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB,
+    Portability = GL_DEBUG_TYPE_PORTABILITY_ARB,
+    Performance = GL_DEBUG_TYPE_PERFORMANCE_ARB,
+    Other = GL_DEBUG_TYPE_OTHER_ARB,
+};
+
+enum class DebugSeverity {
+    Low = GL_DEBUG_SEVERITY_LOW_ARB,
+    Medium = GL_DEBUG_SEVERITY_MEDIUM_ARB,
+    High = GL_DEBUG_SEVERITY_HIGH_ARB,
+};
+
+enum class DebugSourceAPI {
+    OpenGL = GL_DEBUG_SOURCE_API_ARB,
+    WindowSystem = GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB,
+    ShaderCompiler = GL_DEBUG_SOURCE_SHADER_COMPILER_ARB,
+    ThirdParty = GL_DEBUG_SOURCE_THIRD_PARTY_ARB,
+    Application = GL_DEBUG_SOURCE_APPLICATION_ARB,
+    Other = GL_DEBUG_SOURCE_OTHER_ARB,
+};
+
+//Shader-related enums
+
 enum class ShaderType {
     FragmentShader = GL_FRAGMENT_SHADER,
     VertexShader = GL_VERTEX_SHADER,
 };
+
+//Texture-related enums
 
 enum class TextureFilter{
     Nearest = GL_NEAREST,
