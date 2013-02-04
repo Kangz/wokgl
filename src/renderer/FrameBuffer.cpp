@@ -67,4 +67,17 @@ void FrameBuffer::bindScreen(){
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void FrameBuffer::clearColor(float r, float g, float b, float a){
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void FrameBuffer::clearDepth(){
+    glClear(GL_DEPTH_BUFFER_BIT);
+}
+
+void FrameBuffer::clearStencil(){
+    glClear(GL_STENCIL_BUFFER_BIT);
+}
+
 }

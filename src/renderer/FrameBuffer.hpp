@@ -23,6 +23,10 @@ class FrameBuffer{
         
         static void bindScreen();
 
+        static void clearColor(float r, float g, float b, float a = 0.0f);
+        static void clearDepth();
+        static void clearStencil();
+
     private:
         GLuint _handle;
         int _width;
