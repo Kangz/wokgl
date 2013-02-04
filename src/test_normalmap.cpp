@@ -129,6 +129,7 @@ int main(int argc, char *argv[]){
         std::cout << "GLEW init OK" << std::endl;
     }
     Debug::init();
+    Debug::makeSynchronous();
 
     run(window);
  
