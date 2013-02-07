@@ -54,6 +54,11 @@ add_executable(
     src/test_framebuffer.cpp
 )
 
+add_executable(
+    test_compute
+    src/test_compute.cpp
+)
+
 target_link_libraries(
     test_normalmap
     SDL2
@@ -68,4 +73,11 @@ target_link_libraries(
     SDL2main
     pthread
     renderer
+)
+
+target_link_libraries(
+    test_compute
+    pthread
+    OpenCL
+    compute
 )
