@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(renderer)
+project(wokgl)
 
 #GLM triggers the long-long warning
 SET(CMAKE_CXX_FLAGS "-g -Wall -std=c++11 -Wextra -pedantic -Wno-long-long -Wno-unused-parameter -Wno-unused-variable")
@@ -24,12 +24,24 @@ file(
     src/renderer/*
 )
 
+file(
+    GLOB_RECURSE
+    compute_sources
+    src/compute/*
+)
+
 #build static libraries
 add_library(
     renderer STATIC
     ${renderer_sources}
 )
 target_link_libraries(renderer SDL2 SDL2_image dl GLEW GL)
+
+add_library(
+    compute STATIC
+    ${compute_sources}
+)
+target_link_libraries(compute OpenCL dl)
 
 #make executables
 add_executable(
