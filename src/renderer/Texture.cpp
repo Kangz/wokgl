@@ -4,8 +4,6 @@
 
 #include "ActiveTextureManager.hpp"
 #include "Buffer.hpp"
-
-#include "ActiveTextureManager.hpp"
 #include "Texture.hpp"
 
 namespace renderer{
