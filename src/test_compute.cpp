@@ -3,7 +3,7 @@
 
 #define DATA_SIZE (1024*1024)
 
-const std::string KernelSource = "\n"		    \
+const std::string KernelSource = "\n"		      \
     "__kernel void square(                    \n" \
     "   __global float* input,                \n" \
     "   __global float* output,               \n" \
@@ -29,8 +29,7 @@ int main(int argc, char* argv[]){
     auto commands = compute::CommandQueue(context);
 
     //Make the program
-    auto program = context.programFromSource(KernelSource);
-    program.build();
+    auto program = context.programFromSource(KernelSource).build();
 
     if(!program.isBuilt()){
         std::cerr << "Error building program" << std::endl;
@@ -57,8 +56,7 @@ int main(int argc, char* argv[]){
     commands.upload(h_input, d_input).apply();
 
     //Launch the kernel
-    kernel.setArgs(d_input, d_output, DATA_SIZE);
-    commands.range(kernel).global(DATA_SIZE).local(kernel.getWorkGroupSize()).apply();
+    commands.range(kernel).global(DATA_SIZE).apply(d_input, d_output, DATA_SIZE);
     commands.waitFinish();
 
     //Download the result
@@ -73,7 +71,7 @@ int main(int argc, char* argv[]){
     }
 
     //Print the result
-    std::cout << "Number of errors: " << n_correct << "/" << DATA_SIZE << std::endl;
+    std::cout << "Number of correct results: " << n_correct << "/" << DATA_SIZE << std::endl;
 
     //Cleanup
     delete[] h_input;
