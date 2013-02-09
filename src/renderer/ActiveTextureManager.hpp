@@ -1,8 +1,6 @@
 #ifndef RENDERER_ACTIVETEXTUREMANAGER_HPP
 #define RENDERER_ACTIVETEXTUREMANAGER_HPP
 
-#include "Texture.hpp"
-
 namespace renderer{
 
 class Texture;

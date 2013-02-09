@@ -7,10 +7,9 @@
 #include <SDL_image.h>
 #include "enums.hpp"
 
-//Should I move it inside Texture.cpp ?
-#include "ActiveTextureManager.hpp"
-
 namespace renderer{
+
+class ActiveTextureManager;
 
 class Texture{ //TODO Change this to Texture2D sometime
     public:

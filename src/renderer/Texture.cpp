@@ -1,3 +1,4 @@
+#include "ActiveTextureManager.hpp"
 #include "Texture.hpp"
 
 namespace renderer{

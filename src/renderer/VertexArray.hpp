@@ -3,9 +3,9 @@
 
 #include <GL/glew.h>
 
-#include "Buffer.hpp"
-
 namespace renderer{
+
+class Buffer;
 
 class VertexArray{
     public:

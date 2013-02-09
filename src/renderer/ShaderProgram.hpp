@@ -5,10 +5,9 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 
-#include "Shader.hpp"
-#include "Texture.hpp"
-
 namespace renderer{
+
+class Shader;
 
 class ShaderProgram{
     public:
