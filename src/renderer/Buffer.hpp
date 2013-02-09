@@ -20,12 +20,13 @@ class Buffer{
         Buffer& feed(int size, const glm::vec3* data);
         Buffer& feed(int size, const glm::vec4* data);
 
-        GLuint getDataType();
-        int getDataSize();
+        GLuint getDataType() const;
+        int getDataSize() const;
+        int getDataCount() const;
 
-        GLuint getHandle();
+        GLuint getHandle() const;
         
-        operator GLuint();
+        operator GLuint() const;
 
     private:
         GLuint _handle;
@@ -33,6 +34,7 @@ class Buffer{
         BufferTarget _target;
         GLuint _dataType;
         int _dataSize;
+        int _dataCount;
 };
 
 class ArrayBuffer: public Buffer{
