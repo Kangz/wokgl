@@ -53,6 +53,14 @@ std::string Device::getVersion() const{
     return std::string(buffer);
 }
 
+cl_platform_id Device::getPlatform() const{
+    return _platform;
+}
+
+void Device::setPlatform(cl_platform_id platform){
+    _platform = platform;
+}
+
 cl_device_id Device::getHandle() const{
     return _handle;
 }
@@ -84,6 +92,7 @@ std::vector<Device> getAllDevices(const Platform& platform, DeviceType type){
     std::vector<Device> res(num_devices);
     for(unsigned int i = 0; i < num_devices; i++){
         res[i].setHandle(ids[i]);
+        res[i].setPlatform(platform);
     }
 
     return res;

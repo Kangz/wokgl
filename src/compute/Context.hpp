@@ -13,6 +13,7 @@ class Buffer;
 class Context{
     public:
         Context(const Device& device);
+        Context(const Device& device, cl_context_properties* properties);
         //Override the copy and assignement constructors
         //to update reference count
         Context(const Context& other);
@@ -37,6 +38,8 @@ class Context{
         cl_context _handle;
         Device _device;
 };
+
+Context getOpenGLInteropContext(const Device& device);
 
 }
 

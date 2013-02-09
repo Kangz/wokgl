@@ -41,7 +41,7 @@ add_library(
     compute STATIC
     ${compute_sources}
 )
-target_link_libraries(compute OpenCL dl)
+target_link_libraries(compute OpenCL dl GL)
 
 #make executables
 add_executable(

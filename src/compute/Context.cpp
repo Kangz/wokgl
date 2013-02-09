@@ -1,3 +1,6 @@
+#include <CL/cl_gl.h>
+#include <GL/glx.h>
+
 #include "Context.hpp"
 #include "Program.hpp"
 #include "Buffer.hpp"
@@ -8,6 +11,12 @@ Context::Context(const Device& device){
     _device = device;
     cl_device_id id = _device;
     _handle = clCreateContext(nullptr, 1, &id, nullptr, nullptr, nullptr);
+}
+
+Context::Context(const Device& device, cl_context_properties* properties){
+    _device = device;
+    cl_device_id id = _device;
+    _handle = clCreateContext(properties, 1, &id, nullptr, nullptr, nullptr);
 }
 
 Context::Context(const Context& other){
@@ -55,6 +64,15 @@ cl_context Context::getHandle() const{
 
 Context::operator cl_context() const{
     return _handle;
+}
+
+Context getOpenGLInteropContext(const Device& device){
+    cl_context_properties properties[] = {
+        CL_GL_CONTEXT_KHR, reinterpret_cast<cl_context_properties>(glXGetCurrentContext()),
+        CL_GLX_DISPLAY_KHR, reinterpret_cast<cl_context_properties>(glXGetCurrentDisplay()),
+        CL_CONTEXT_PLATFORM, reinterpret_cast<cl_context_properties>(device.getPlatform()),
+        0
+    };
 }
 
 }

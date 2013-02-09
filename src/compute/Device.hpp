@@ -25,6 +25,9 @@ class Device{
         std::string getVendor() const;
         std::string getVersion() const;
 
+        cl_platform_id getPlatform() const;
+        void setPlatform(cl_platform_id platform);
+
         cl_device_id getHandle() const;
         void setHandle(cl_device_id id);
 
@@ -32,6 +35,7 @@ class Device{
 
     private:
         cl_device_id _handle;
+        cl_platform_id _platform;
 };
 
 //Allow a device to be easily printed
