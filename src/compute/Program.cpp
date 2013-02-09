@@ -32,15 +32,17 @@ Program::~Program(){
     clReleaseProgram(_handle);
 }
 
-void Program::build(){
+Program& Program::build(){
     this->build("");
+    return *this;
 }
 
-void Program::build(const std::string& options){
+Program& Program::build(const std::string& options){
     int err = clBuildProgram(_handle, 0, nullptr, options.c_str(), nullptr, nullptr);
     if(err == CL_SUCCESS){
         _built = true;
     }
+    return *this;
 }
 
 bool Program::isBuilt() const{

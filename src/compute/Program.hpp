@@ -20,8 +20,8 @@ class Program{
         ~Program();
 
         //Compiles the program
-        void build();
-        void build(const std::string& options);
+        Program& build();
+        Program& build(const std::string& options);
 
         //True only of the program was successfully compiled
         bool isBuilt() const;
