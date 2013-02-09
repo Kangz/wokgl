@@ -1,5 +1,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Shader.hpp"
+#include "Texture.hpp"
 #include "ShaderProgram.hpp"
 
 namespace renderer{

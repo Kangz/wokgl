@@ -3,9 +3,9 @@
 
 #include <GL/glew.h>
 
-#include "Texture.hpp"
-
 namespace renderer{
+
+class Texture;
 
 class FrameBuffer{
     public:

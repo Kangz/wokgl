@@ -1,5 +1,6 @@
 #ifndef RENDERER_DEBUG_HPP
 #define RENDERER_DEBUG_HPP
+
 #include "enums.hpp"
 
 namespace renderer{

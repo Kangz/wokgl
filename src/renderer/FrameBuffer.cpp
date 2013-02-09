@@ -1,3 +1,4 @@
+#include "Texture.hpp"
 #include "FrameBuffer.hpp"
 
 namespace renderer{
