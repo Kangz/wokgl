@@ -19,6 +19,7 @@ class Device{
 
         //Getters for information about the device
         std::string getExtensions() const;
+        int getMaxComputeUnits() const;
         std::string getName() const;
         std::string getProfile() const;
         std::string getVendor() const;

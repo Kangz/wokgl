@@ -19,6 +19,12 @@ std::string Device::getExtensions() const{
     return std::string(buffer);
 }
 
+int Device::getMaxComputeUnits() const{
+    int max = 0;
+    clGetDeviceInfo(*this, CL_DEVICE_MAX_COMPUTE_UNITS, sizeof(max), &max, nullptr);
+    return max;
+}
+
 std::string Device::getName() const{
     static const int BUFFER_SIZE = 1024;
     char buffer[BUFFER_SIZE];
