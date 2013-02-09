@@ -2,11 +2,11 @@
 #define COMPUTE_COMMANDS_HPP
 
 #include <CL/cl.h>
+#include "Kernel.hpp"
 
 namespace compute{
 
 class CommandQueue;
-class Kernel;
 class Buffer;
 
 //A base class for all commands that can be scheduled using events
@@ -75,13 +75,30 @@ class NDRangeCommand: public SchedulableCommand{
 
         virtual void apply();
 
+        template<typename ... Args> NDRangeCommand& args(const Args& ... args);
+        template<typename ... Args> void apply(const Args& ... args);
+
     private:
-        cl_kernel _kernel;
+        Kernel _kernel;
         int _dim;
         size_t _global[3];
         size_t _globalOffset[3];
         size_t _local[3];
+        bool _hasGlobalOffset;
+        bool _hasLocal;
 };
+
+template<typename ... Args>
+NDRangeCommand& NDRangeCommand::args(const Args& ... args){
+    _kernel.setArgs(args...);
+    return *this;
+}
+
+template<typename ... Args>
+void NDRangeCommand::apply(const Args& ... args){
+    this->args(args...);
+    this->apply();
+}
 
 }
 

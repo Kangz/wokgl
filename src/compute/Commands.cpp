@@ -1,5 +1,4 @@
 #include "CommandQueue.hpp"
-#include "Kernel.hpp"
 #include "Buffer.hpp"
 #include "Commands.hpp"
 
@@ -57,7 +56,7 @@ void DownloadCommand::apply(){
 }
 
 NDRangeCommand::NDRangeCommand(CommandQueue queue, Kernel kernel)
-:SchedulableCommand(queue), _kernel(kernel), _dim(0){
+:SchedulableCommand(queue), _kernel(kernel), _dim(0), _hasGlobalOffset(false), _hasLocal(false){
 }
 
 //TODO add an assert for the dimension
@@ -83,12 +82,14 @@ NDRangeCommand& NDRangeCommand::global(int sizex, int sizey, int sizez){
 }
 
 NDRangeCommand& NDRangeCommand::globalOffset(int offsetx){
+    _hasGlobalOffset = true;
     _dim = 1;
     _globalOffset[0] = offsetx;
     return *this;
 }
 
 NDRangeCommand& NDRangeCommand::globalOffset(int offsetx, int offsety){
+    _hasGlobalOffset = true;
     _dim = 2;
     _globalOffset[0] = offsetx;
     _globalOffset[1] = offsety;
@@ -96,6 +97,7 @@ NDRangeCommand& NDRangeCommand::globalOffset(int offsetx, int offsety){
 }
 
 NDRangeCommand& NDRangeCommand::globalOffset(int offsetx, int offsety, int offsetz){
+    _hasGlobalOffset = true;
     _dim = 3;
     _globalOffset[0] = offsetx;
     _globalOffset[1] = offsety;
@@ -104,12 +106,14 @@ NDRangeCommand& NDRangeCommand::globalOffset(int offsetx, int offsety, int offse
 }
 
 NDRangeCommand& NDRangeCommand::local(int sizex){
+    _hasLocal = true;
     _dim = 1;
     _local[0] = sizex;
     return *this;
 }
 
 NDRangeCommand& NDRangeCommand::local(int sizex, int sizey){
+    _hasLocal = true;
     _dim = 2;
     _local[0] = sizex;
     _local[1] = sizey;
@@ -117,6 +121,7 @@ NDRangeCommand& NDRangeCommand::local(int sizex, int sizey){
 }
 
 NDRangeCommand& NDRangeCommand::local(int sizex, int sizey, int sizez){
+    _hasLocal = true;
     _dim = 3;
     _local[0] = sizex;
     _local[1] = sizey;
@@ -126,7 +131,8 @@ NDRangeCommand& NDRangeCommand::local(int sizex, int sizey, int sizez){
 
 void NDRangeCommand::apply(){
     clEnqueueNDRangeKernel(_queue, _kernel, _dim,
-            _global, _globalOffset, _local,
+            (_hasGlobalOffset ? _globalOffset : nullptr), _global,
+            (_hasLocal ? _local : nullptr),
             0, nullptr, nullptr);
 }
 
