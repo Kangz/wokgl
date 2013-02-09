@@ -2,6 +2,9 @@
 
 namespace compute{
 
+Buffer::Buffer(){
+}
+
 Buffer::Buffer(cl_mem mem, int size):_handle(mem), _size(size){
 }
 

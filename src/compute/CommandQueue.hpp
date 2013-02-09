@@ -15,6 +15,7 @@ class NDRangeCommand;
 //Represents an OpenCL command queue
 class CommandQueue{
     public:
+        CommandQueue();
         CommandQueue(const Context& context);
         //Override copy and assignement constructors
         //tu update the reference count

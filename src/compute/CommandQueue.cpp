@@ -6,6 +6,9 @@
 
 namespace compute{
 
+CommandQueue::CommandQueue(){
+}
+
 CommandQueue::CommandQueue(const Context& context){
     _handle = clCreateCommandQueue(context, context.getDevice(), 0, nullptr);
 }

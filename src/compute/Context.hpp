@@ -12,6 +12,7 @@ class Buffer;
 //Represents an OpenGL context
 class Context{
     public:
+        Context();
         Context(const Device& device);
         Context(const Device& device, cl_context_properties* properties);
         //Override the copy and assignement constructors
@@ -38,8 +39,6 @@ class Context{
         cl_context _handle;
         Device _device;
 };
-
-Context getOpenGLInteropContext(const Device& device);
 
 }
 

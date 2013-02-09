@@ -11,6 +11,7 @@ class Buffer;
 //Represents an OpenCL Kernel
 class Kernel{
     public:
+        Kernel();
         Kernel(cl_kernel kernel, cl_device_id device);
         //Override copy and assignement constructors to
         //update teh reference count

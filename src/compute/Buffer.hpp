@@ -9,6 +9,7 @@ namespace compute{
 //Essentially a wrapper around a cl_mem and a size
 class Buffer{
     public:
+        Buffer();
         Buffer(cl_mem mem, int size);
         //Override copy and assignement constructors to update
         //the cl_mem reference count

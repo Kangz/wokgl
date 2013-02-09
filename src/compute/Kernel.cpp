@@ -4,6 +4,9 @@
 
 namespace compute{
 
+Kernel::Kernel(){
+}
+
 Kernel::Kernel(cl_kernel kernel, cl_device_id device):_handle(kernel), _device(device){
 }
 
