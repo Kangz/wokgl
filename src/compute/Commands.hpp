@@ -55,6 +55,28 @@ class DownloadCommand: public SchedulableCommand{
         int _size;
 };
 
+//The command used to acquire OpenGL objects
+class AcquireCommand: public SchedulableCommand{
+    public:
+        AcquireCommand(CommandQueue queue, Buffer buffer);
+
+        virtual void apply();
+
+    private:
+        cl_mem _buffer;
+};
+
+//The command used to release OpenGL objects
+class ReleaseCommand: public SchedulableCommand{
+    public:
+        ReleaseCommand(CommandQueue queue, Buffer buffer);
+
+        virtual void apply();
+
+    private:
+        cl_mem _buffer;
+};
+
 //The command tha launches a parallel computation on the device
 class NDRangeCommand: public SchedulableCommand{
     public:

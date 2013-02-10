@@ -11,6 +11,8 @@ class Buffer;
 class UploadCommand;
 class DownloadCommand;
 class NDRangeCommand;
+class AcquireCommand;
+class ReleaseCommand;
 
 //Represents an OpenCL command queue
 class CommandQueue{
@@ -32,6 +34,10 @@ class CommandQueue{
         DownloadCommand download(Buffer src, void* dest);
         //Launch a computation on the device
         NDRangeCommand range(Kernel kernel);
+        //Acquires a GL object for use with OpenCL
+        AcquireCommand acquire(Buffer buffer);
+        //Release a GL object for use with OpenGL
+        ReleaseCommand release(Buffer buffer);
 
         //Blocks until the queue is empty
         void waitFinish();

@@ -1,3 +1,5 @@
+#include <CL/cl_gl.h>
+
 #include "CommandQueue.hpp"
 #include "Buffer.hpp"
 #include "Commands.hpp"
@@ -51,8 +53,24 @@ DownloadCommand& DownloadCommand::size(int size){
 }
 
 void DownloadCommand::apply(){
-    int err = clEnqueueReadBuffer(_queue, _buffer, (_blocking ? CL_TRUE: CL_FALSE),
+    clEnqueueReadBuffer(_queue, _buffer, (_blocking ? CL_TRUE: CL_FALSE),
             _offset, _size, _hostBuffer, 0, nullptr, nullptr);
+}
+
+AcquireCommand::AcquireCommand(CommandQueue queue, Buffer buffer)
+:SchedulableCommand(queue), _buffer(buffer){
+}
+
+void AcquireCommand::apply(){
+    clEnqueueAcquireGLObjects(_queue, 1, &_buffer, 0, nullptr, nullptr);
+}
+
+ReleaseCommand::ReleaseCommand(CommandQueue queue, Buffer buffer)
+:SchedulableCommand(queue), _buffer(buffer){
+}
+
+void ReleaseCommand::apply(){
+    clEnqueueReleaseGLObjects(_queue, 1, &_buffer, 0, nullptr, nullptr);
 }
 
 NDRangeCommand::NDRangeCommand(CommandQueue queue, Kernel kernel)

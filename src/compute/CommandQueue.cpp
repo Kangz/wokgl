@@ -45,6 +45,14 @@ NDRangeCommand CommandQueue::range(Kernel kernel){
     return NDRangeCommand(*this, kernel);
 }
 
+AcquireCommand CommandQueue::acquire(Buffer buffer){
+    return AcquireCommand(*this, buffer);
+}
+
+ReleaseCommand CommandQueue::release(Buffer buffer){
+    return ReleaseCommand(*this, buffer);
+}
+
 void CommandQueue::waitFinish(){
     clFinish(_handle);
 }
