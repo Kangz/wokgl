@@ -1,4 +1,11 @@
 #include "ActiveTextureManager.hpp"
+#include <GL/glew.h>
+#include <SDL.h>
+#include <SDL_image.h>
+
+#include "ActiveTextureManager.hpp"
+#include "Buffer.hpp"
+
 #include "Texture.hpp"
 
 namespace renderer{
@@ -23,6 +30,19 @@ int Texture::activate(){
 //TODO check it is not already bound
 Texture& Texture::bind(){
 	glBindTexture(GL_TEXTURE_2D, _handle);
+    return *this;
+}
+
+Texture& Texture::dataFromBuffer(const Buffer& buf){
+    this->bind().applyWrapAndFilter();
+    glTexBuffer(GL_TEXTURE_BUFFER, static_cast<int>(_format), buf);
+    return *this;
+}
+
+Texture& Texture::emptyData(int width, int height){
+    this->bind().applyWrapAndFilter();
+	glTexImage2D(GL_TEXTURE_2D, 0, static_cast<int>(_format), width, height, 0,
+            GL_RGBA, GL_UNSIGNED_BYTE, 0);
     return *this;
 }
 
@@ -57,13 +77,6 @@ Texture& Texture::loadSurface(SDL_Surface* surface){
     glTexImage2D(GL_TEXTURE_2D, 0, static_cast<int>(_format), w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,
             convertedSurface->pixels);
     
-    return *this;
-}
-
-Texture& Texture::emptyData(int width, int height){
-    this->bind().applyWrapAndFilter();
-	glTexImage2D(GL_TEXTURE_2D, 0, static_cast<int>(_format), width, height, 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, 0);
     return *this;
 }
 

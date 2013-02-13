@@ -2,14 +2,13 @@
 #define RENDERER_TEXTURE_HPP
 
 #include <string>
-#include <GL/glew.h>
 #include <SDL.h>
-#include <SDL_image.h>
 #include "enums.hpp"
 
 namespace renderer{
 
 class ActiveTextureManager;
+class Buffer;
 
 class Texture{ //TODO Change this to Texture2D sometime
     public:
@@ -19,6 +18,7 @@ class Texture{ //TODO Change this to Texture2D sometime
         
         int activate();
         Texture& bind();
+        Texture& dataFromBuffer(const Buffer& buf);
         Texture& emptyData(int width, int height);
         Texture& loadSurface(SDL_Surface* surface);
         Texture& quickFileLoad(const std::string& filename);
