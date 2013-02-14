@@ -21,7 +21,12 @@ Texture::~Texture(){
 }
 
 int Texture::activate(){
-    _texUnit = ActiveTextureManager::getInstance().activate(this);
+    _texUnit = ActiveTextureManager::getInstance(ActiveManagerType::Sampler).activate(this);
+    return _texUnit;
+}
+
+int Texture::activateAsImage(){
+    _texUnit = ActiveTextureManager::getInstance(ActiveManagerType::Image).activate(this);
     return _texUnit;
 }
 

@@ -115,10 +115,38 @@ ShaderProgram& ShaderProgram::uni(const std::string& uniName, const glm::vec4& v
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, Texture& tex){
     GLuint location = glGetUniformLocation(_handle, uniName.c_str());
+
+    int value;
+    int type = this->getUniformType(uniName);
+    if(ShaderProgram::isSamplerType(type)){
+        value = tex.activate();
+    }else{
+        value = tex.activateAsImage();
+    }
+
     glProgramUniform1i(_handle, location, tex.activate());
     return *this;
 }
 
+bool ShaderProgram::isSamplerType(unsigned int type){
+    return type == GL_SAMPLER_1D ||
+           type == GL_SAMPLER_2D ||
+           type == GL_SAMPLER_3D;
+    //TODO make the complete list
+}
+
+unsigned int ShaderProgram::getUniformType(const std::string& uniName){
+    GLuint uniformIndice;
+    char const * cName = uniName.c_str();
+    glGetUniformIndices(_handle, 1, &cName, &uniformIndice);
+
+    GLuint type;
+    char miniBuf;
+    int size;
+    glGetActiveUniform(_handle, uniformIndice, 0, nullptr, &size, &type, &miniBuf);
+
+    return type;
+}
 
 GLuint ShaderProgram::getHandle(){
     return _handle;

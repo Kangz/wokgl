@@ -5,6 +5,14 @@
 
 namespace renderer{
 
+//Active manager-related enums
+
+enum class ActiveManagerType{
+    Sampler = 0,
+    Image = 1,
+    Max = 2,
+};
+
 //Buffer-related enums
 
 enum class BufferTarget{

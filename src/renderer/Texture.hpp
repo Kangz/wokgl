@@ -17,6 +17,7 @@ class Texture{ //TODO Change this to Texture2D sometime
         ~Texture();
         
         int activate();
+        int activateAsImage();
         Texture& bind();
         Texture& dataFromBuffer(const Buffer& buf);
         Texture& emptyData(int width, int height);
