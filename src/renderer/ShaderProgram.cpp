@@ -91,31 +91,31 @@ ShaderProgram& ShaderProgram::use(){
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, float f){
     GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glUniform1f(location, f);
+    glProgramUniform1f(_handle, location, f);
     return *this;
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, const glm::vec2& v){
     GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glUniform2fv(location, 1, glm::value_ptr(v));
+    glProgramUniform2fv(_handle, location, 1, glm::value_ptr(v));
     return *this;
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, const glm::vec3& v){
     GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glUniform3fv(location, 1, glm::value_ptr(v));
+    glProgramUniform3fv(_handle, location, 1, glm::value_ptr(v));
     return *this;
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, const glm::vec4& v){
     GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glUniform4fv(location, 1, glm::value_ptr(v));
+    glProgramUniform4fv(_handle, location, 1, glm::value_ptr(v));
     return *this;
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, Texture& tex){
     GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glUniform1i(location, tex.activate());
+    glProgramUniform1i(_handle, location, tex.activate());
     return *this;
 }
 
