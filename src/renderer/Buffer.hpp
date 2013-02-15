@@ -7,6 +7,9 @@
 
 namespace renderer{
 
+class Texture;
+enum class TextureFormat;
+
 class Buffer{
     public:
         Buffer(BufferTarget target, BufferUsage usage);
@@ -51,6 +54,14 @@ class ElementBuffer: public Buffer{
         template<typename T> ElementBuffer(BufferUsage usage, int size, const T* data)
         :Buffer(BufferTarget::ElementArray, usage, size, data){}
 };
+
+class TextureBuffer: public Buffer{
+    public:
+        TextureBuffer(BufferUsage usage): Buffer(BufferTarget::Texture, usage){}
+        template<typename T> TextureBuffer(BufferUsage usage, int size, const T* data)
+        :Buffer(BufferTarget::Texture, usage, size, data){}
+};
+
 
 template<typename T> Buffer::Buffer(BufferTarget target, BufferUsage usage, int size, const T* data): Buffer(target, usage){
     this->feed(size, data);

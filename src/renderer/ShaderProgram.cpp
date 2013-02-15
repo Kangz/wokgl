@@ -131,7 +131,8 @@ ShaderProgram& ShaderProgram::uni(const std::string& uniName, Texture& tex){
 bool ShaderProgram::isSamplerType(unsigned int type){
     return type == GL_SAMPLER_1D ||
            type == GL_SAMPLER_2D ||
-           type == GL_SAMPLER_3D;
+           type == GL_SAMPLER_3D ||
+           type == GL_SAMPLER_BUFFER;
     //TODO make the complete list
 }
 

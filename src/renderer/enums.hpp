@@ -20,6 +20,7 @@ enum class BufferTarget{
     ElementArray = GL_ELEMENT_ARRAY_BUFFER,
     PixelPack = GL_PIXEL_PACK_BUFFER,
     PixelUnpack = GL_PIXEL_UNPACK_BUFFER,
+    Texture = GL_TEXTURE_BUFFER,
 };
 
 enum class BufferUsage{
@@ -88,6 +89,13 @@ enum class TextureFormat{
    RG32F = GL_RG32F,
    RGB32F = GL_RGB32F,
    RGBA32F = GL_RGBA32F,
+};
+
+enum class TextureTarget{
+    Texture1D = GL_TEXTURE_1D,
+    Texture2D = GL_TEXTURE_2D,
+    Texture3D = GL_TEXTURE_3D,
+    TextureBuffer = GL_TEXTURE_BUFFER,
 };
 
 enum class TextureWrap{

@@ -31,6 +31,7 @@ class Texture{ //TODO Change this to Texture2D sometime
         Texture& setWrap(TextureWrap mode);
         Texture& setWrapS(TextureWrap mode);
         Texture& setWrapT(TextureWrap mode);
+        Texture& setTarget(TextureTarget target);
         Texture& applyWrapAndFilter();
 
         GLuint getHandle();
@@ -38,8 +39,12 @@ class Texture{ //TODO Change this to Texture2D sometime
         operator GLuint();
 
     private:
+        Texture(Texture&);
+        Texture& operator=(Texture&);
+
         GLuint _handle;
         int _texUnit;
+        TextureTarget _target;
         TextureFormat _format;
         TextureWrap _wrapS = TextureWrap::Repeat;
         TextureWrap _wrapT = TextureWrap::Repeat;
