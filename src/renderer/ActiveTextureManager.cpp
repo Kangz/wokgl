@@ -29,7 +29,7 @@ ActiveTextureManager::ActiveTextureManager(int nUnits)
 int ActiveTextureManager::activate(Texture* tex){
     int unit = tex->getLastTextureUnit();
     _count ++;
-    if(_boundTexture[unit] == tex){//check against out of bounds ?
+    if(unit >= 0 && _boundTexture[unit] == tex){
         _lastBoundTime[unit] = _count;
         return unit;
     }
