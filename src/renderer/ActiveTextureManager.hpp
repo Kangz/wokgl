@@ -14,9 +14,10 @@ class ActiveTextureManager{
     
     private:
         static int getMaxUnits(ActiveManagerType type);
-        ActiveTextureManager(int nUnits);
+        ActiveTextureManager(int nUnits, ActiveManagerType type);
         //~ActiveTextureManager(); //who wants to destroy it ?
 
+        ActiveManagerType _type;
         int _activeUnit;
         int _nUnits;
         int* _lastBoundTime;

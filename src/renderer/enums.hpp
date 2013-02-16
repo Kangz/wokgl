@@ -76,7 +76,7 @@ enum class TextureFilter{
 };
 
 enum class TextureFormat{
-   RGBA = GL_RGBA,
+   RGBA8 = GL_RGBA8,
 
    //Half floats
    R16F = GL_R16F,

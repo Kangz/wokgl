@@ -24,6 +24,9 @@ class Texture{ //TODO Change this to Texture2D sometime
         Texture& loadSurface(SDL_Surface* surface);
         Texture& quickFileLoad(const std::string& filename);
         int getLastTextureUnit();
+        int getLastImageUnit();
+
+        TextureFormat& getFormat();
 
         Texture& setFilter(TextureFilter filter);
         Texture& setMagFilter(TextureFilter filter);
@@ -44,6 +47,7 @@ class Texture{ //TODO Change this to Texture2D sometime
 
         GLuint _handle;
         int _texUnit;
+        int _imageUnit;
         TextureTarget _target;
         TextureFormat _format;
         TextureWrap _wrapS = TextureWrap::Repeat;

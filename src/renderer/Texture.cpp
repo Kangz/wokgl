@@ -8,12 +8,13 @@
 
 namespace renderer{
 
-Texture::Texture(): Texture(TextureFormat::RGBA){
+Texture::Texture(): Texture(TextureFormat::RGBA8){
 }
 
 Texture::Texture(TextureFormat format):_format(format){
     glGenTextures(1, &_handle);
     _texUnit = -1;
+    _imageUnit = -1;
 }
 
 Texture::~Texture(){
@@ -26,8 +27,8 @@ int Texture::activate(){
 }
 
 int Texture::activateAsImage(){
-    _texUnit = ActiveTextureManager::getInstance(ActiveManagerType::Image).activate(this);
-    return _texUnit;
+    _imageUnit = ActiveTextureManager::getInstance(ActiveManagerType::Image).activate(this);
+    return _imageUnit;
 }
 
 //TODO check it is not already bound
@@ -99,6 +100,14 @@ Texture& Texture::quickFileLoad(const std::string& filename){
 
 int Texture::getLastTextureUnit(){
     return _texUnit;
+}
+
+int Texture::getLastImageUnit(){
+    return _imageUnit;
+}
+
+TextureFormat& Texture::getFormat(){
+    return _format;
 }
 
 Texture& Texture::setFilter(TextureFilter filter){

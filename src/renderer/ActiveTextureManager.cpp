@@ -3,19 +3,21 @@
 #include "Texture.hpp"
 #include "ActiveTextureManager.hpp"
 
+#include <iostream>
+
 namespace renderer{
 
 ActiveTextureManager& ActiveTextureManager::getInstance(ActiveManagerType type){
     int index = static_cast<int>(type);
     if(!_activeManagerInstances[index]){
         int nUnits = ActiveTextureManager::getMaxUnits(type);
-        _activeManagerInstances[index] = new ActiveTextureManager(nUnits);
+        _activeManagerInstances[index] = new ActiveTextureManager(nUnits, type);
     }
     return *_activeManagerInstances[index];
 }
 
-ActiveTextureManager::ActiveTextureManager(int nUnits)
-: _activeUnit(0), _nUnits(nUnits), _count(0){
+ActiveTextureManager::ActiveTextureManager(int nUnits, ActiveManagerType type)
+:_type(type), _activeUnit(0), _nUnits(nUnits), _count(0){
     _lastBoundTime = new int[_nUnits];
     _boundTexture = new Texture*[_nUnits];
 
@@ -27,7 +29,12 @@ ActiveTextureManager::ActiveTextureManager(int nUnits)
 }
 
 int ActiveTextureManager::activate(Texture* tex){
-    int unit = tex->getLastTextureUnit();
+    int unit;
+    if(_type == ActiveManagerType::Sampler){
+        unit = tex->getLastTextureUnit();
+    }else{
+        unit = tex->getLastImageUnit();
+    }
     _count ++;
     if(unit >= 0 && _boundTexture[unit] == tex){
         _lastBoundTime[unit] = _count;
@@ -43,7 +50,12 @@ int ActiveTextureManager::activate(Texture* tex){
     _boundTexture[minUnit] = tex;
     _lastBoundTime[minUnit] = _count;
     _activeUnit = minUnit;
-    glActiveTexture(GL_TEXTURE0 + minUnit);
+    if(_type == ActiveManagerType::Sampler){
+        glActiveTexture(GL_TEXTURE0 + minUnit);
+    }else{
+        glBindImageTexture(minUnit, *tex, 0, GL_FALSE, 0, GL_READ_WRITE,
+                static_cast<int>(tex->getFormat()));
+    }
     tex->bind();
 
     return minUnit;
