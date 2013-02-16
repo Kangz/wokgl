@@ -90,41 +90,51 @@ ShaderProgram& ShaderProgram::use(){
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, float f){
-    GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glProgramUniform1f(_handle, location, f);
+    int location = glGetUniformLocation(_handle, uniName.c_str());
+    if(location >= 0){
+        glProgramUniform1f(_handle, location, f);
+    }
     return *this;
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, const glm::vec2& v){
-    GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glProgramUniform2fv(_handle, location, 1, glm::value_ptr(v));
+    int location = glGetUniformLocation(_handle, uniName.c_str());
+    if(location >= 0){
+        glProgramUniform2fv(_handle, location, 1, glm::value_ptr(v));
+    }
     return *this;
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, const glm::vec3& v){
-    GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glProgramUniform3fv(_handle, location, 1, glm::value_ptr(v));
+    int location = glGetUniformLocation(_handle, uniName.c_str());
+    if(location >= 0){
+        glProgramUniform3fv(_handle, location, 1, glm::value_ptr(v));
+    }
     return *this;
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, const glm::vec4& v){
-    GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glProgramUniform4fv(_handle, location, 1, glm::value_ptr(v));
+    int location = glGetUniformLocation(_handle, uniName.c_str());
+    if(location >= 0){
+        glProgramUniform4fv(_handle, location, 1, glm::value_ptr(v));
+    }
     return *this;
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, Texture& tex){
-    GLuint location = glGetUniformLocation(_handle, uniName.c_str());
+    int location = glGetUniformLocation(_handle, uniName.c_str());
 
-    int value;
-    int type = this->getUniformType(uniName);
-    if(ShaderProgram::isSamplerType(type)){
-        value = tex.activate();
-    }else{
-        value = tex.activateAsImage();
+    if(location >= 0){
+        int value;
+        int type = this->getUniformType(uniName);
+        if(ShaderProgram::isSamplerType(type)){
+            value = tex.activate();
+        }else{
+            value = tex.activateAsImage();
+        }
+
+        glProgramUniform1i(_handle, location, tex.activate());
     }
-
-    glProgramUniform1i(_handle, location, tex.activate());
     return *this;
 }
 
