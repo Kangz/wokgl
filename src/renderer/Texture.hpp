@@ -17,12 +17,17 @@ class Texture{ //TODO Change this to Texture2D sometime
         ~Texture();
         
         int activate();
+        int activateAsImage();
         Texture& bind();
+        Texture& unbind();
         Texture& dataFromBuffer(const Buffer& buf);
         Texture& emptyData(int width, int height);
         Texture& loadSurface(SDL_Surface* surface);
         Texture& quickFileLoad(const std::string& filename);
         int getLastTextureUnit();
+        int getLastImageUnit();
+
+        TextureFormat& getFormat();
 
         Texture& setFilter(TextureFilter filter);
         Texture& setMagFilter(TextureFilter filter);
@@ -30,6 +35,7 @@ class Texture{ //TODO Change this to Texture2D sometime
         Texture& setWrap(TextureWrap mode);
         Texture& setWrapS(TextureWrap mode);
         Texture& setWrapT(TextureWrap mode);
+        Texture& setTarget(TextureTarget target);
         Texture& applyWrapAndFilter();
 
         GLuint getHandle();
@@ -37,8 +43,13 @@ class Texture{ //TODO Change this to Texture2D sometime
         operator GLuint();
 
     private:
+        Texture(Texture&);
+        Texture& operator=(Texture&);
+
         GLuint _handle;
         int _texUnit;
+        int _imageUnit;
+        TextureTarget _target;
         TextureFormat _format;
         TextureWrap _wrapS = TextureWrap::Repeat;
         TextureWrap _wrapT = TextureWrap::Repeat;

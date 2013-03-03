@@ -133,6 +133,6 @@ int main(int argc, char *argv[]){
 
     run(window);
  
-    destroyWindow(window, &context);
+    destroyWindow(window, context);
     return 0;
 }

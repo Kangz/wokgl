@@ -7,6 +7,9 @@
 
 namespace renderer{
 
+class Texture;
+enum class TextureFormat;
+
 class Buffer{
     public:
         Buffer(BufferTarget target, BufferUsage usage);
@@ -20,12 +23,13 @@ class Buffer{
         Buffer& feed(int size, const glm::vec3* data);
         Buffer& feed(int size, const glm::vec4* data);
 
-        GLuint getDataType();
-        int getDataSize();
+        GLuint getDataType() const;
+        int getDataSize() const;
+        int getDataCount() const;
 
-        GLuint getHandle();
+        GLuint getHandle() const;
         
-        operator GLuint();
+        operator GLuint() const;
 
     private:
         GLuint _handle;
@@ -33,6 +37,7 @@ class Buffer{
         BufferTarget _target;
         GLuint _dataType;
         int _dataSize;
+        int _dataCount;
 };
 
 class ArrayBuffer: public Buffer{
@@ -49,6 +54,14 @@ class ElementBuffer: public Buffer{
         template<typename T> ElementBuffer(BufferUsage usage, int size, const T* data)
         :Buffer(BufferTarget::ElementArray, usage, size, data){}
 };
+
+class TextureBuffer: public Buffer{
+    public:
+        TextureBuffer(BufferUsage usage): Buffer(BufferTarget::Texture, usage){}
+        template<typename T> TextureBuffer(BufferUsage usage, int size, const T* data)
+        :Buffer(BufferTarget::Texture, usage, size, data){}
+};
+
 
 template<typename T> Buffer::Buffer(BufferTarget target, BufferUsage usage, int size, const T* data): Buffer(target, usage){
     this->feed(size, data);

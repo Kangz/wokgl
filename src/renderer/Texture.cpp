@@ -1,21 +1,20 @@
-#include "ActiveTextureManager.hpp"
 #include <GL/glew.h>
 #include <SDL.h>
 #include <SDL_image.h>
 
 #include "ActiveTextureManager.hpp"
 #include "Buffer.hpp"
-
 #include "Texture.hpp"
 
 namespace renderer{
 
-Texture::Texture(): Texture(TextureFormat::RGBA){
+Texture::Texture(): Texture(TextureFormat::RGBA8){
 }
 
 Texture::Texture(TextureFormat format):_format(format){
     glGenTextures(1, &_handle);
     _texUnit = -1;
+    _imageUnit = -1;
 }
 
 Texture::~Texture(){
@@ -23,26 +22,40 @@ Texture::~Texture(){
 }
 
 int Texture::activate(){
-    _texUnit = ActiveTextureManager::getInstance().activate(this);
+    _texUnit = ActiveTextureManager::getInstance(ActiveManagerType::Sampler).activate(this);
     return _texUnit;
+}
+
+int Texture::activateAsImage(){
+    _imageUnit = ActiveTextureManager::getInstance(ActiveManagerType::Image).activate(this);
+    return _imageUnit;
 }
 
 //TODO check it is not already bound
 Texture& Texture::bind(){
-	glBindTexture(GL_TEXTURE_2D, _handle);
+	glBindTexture(static_cast<int>(_target), _handle);
+    return *this;
+}
+
+Texture& Texture::unbind(){
+	glBindTexture(static_cast<int>(_target), 0);
     return *this;
 }
 
 Texture& Texture::dataFromBuffer(const Buffer& buf){
+    this->_target = TextureTarget::TextureBuffer;
     this->bind().applyWrapAndFilter();
     glTexBuffer(GL_TEXTURE_BUFFER, static_cast<int>(_format), buf);
+    this->unbind();
     return *this;
 }
 
 Texture& Texture::emptyData(int width, int height){
+    this->_target = TextureTarget::Texture2D;
     this->bind().applyWrapAndFilter();
 	glTexImage2D(GL_TEXTURE_2D, 0, static_cast<int>(_format), width, height, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    this->unbind();
     return *this;
 }
 
@@ -72,11 +85,13 @@ Texture& Texture::loadSurface(SDL_Surface* surface){
     SDL_BlitSurface(surface, NULL, convertedSurface, NULL);
 
     //Upload the surface to the GPU
+    this->_target = TextureTarget::Texture2D;
     this->bind().applyWrapAndFilter();
  
     glTexImage2D(GL_TEXTURE_2D, 0, static_cast<int>(_format), w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,
             convertedSurface->pixels);
     
+    this->unbind();
     return *this;
 }
 
@@ -93,6 +108,14 @@ Texture& Texture::quickFileLoad(const std::string& filename){
 
 int Texture::getLastTextureUnit(){
     return _texUnit;
+}
+
+int Texture::getLastImageUnit(){
+    return _imageUnit;
+}
+
+TextureFormat& Texture::getFormat(){
+    return _format;
 }
 
 Texture& Texture::setFilter(TextureFilter filter){
@@ -125,12 +148,20 @@ Texture& Texture::setWrapT(TextureWrap mode){
     return *this;
 }
 
+Texture& Texture::setTarget(TextureTarget target){
+    _target = target;
+    return *this;
+}
+
 Texture& Texture::applyWrapAndFilter(){
-    this->bind();
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<int>(_minFilter));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<int>(_magFilter));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<int>(_wrapS));
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<int>(_wrapT));
+    //TODO: do a nicer check ?
+    if(_target != TextureTarget::TextureBuffer){
+        int target = static_cast<int>(_target);
+        glTexParameteri(target, GL_TEXTURE_MIN_FILTER, static_cast<int>(_minFilter));
+        glTexParameteri(target, GL_TEXTURE_MAG_FILTER, static_cast<int>(_magFilter));
+        glTexParameteri(target, GL_TEXTURE_WRAP_S, static_cast<int>(_wrapS));
+        glTexParameteri(target, GL_TEXTURE_WRAP_T, static_cast<int>(_wrapT));
+    }
     return *this;
 }
 

@@ -40,25 +40,29 @@ ShaderProgram& ShaderProgram::bindAttrib(int position, const std::string& attrib
     return *this;
 }
 
+std::string ShaderProgram::getInfoLog(){
+    int infoLogLength;
+    char* cInfoLog;
+
+    glGetProgramiv(_handle, GL_INFO_LOG_LENGTH, &infoLogLength);
+    cInfoLog = new char[infoLogLength];
+    glGetProgramInfoLog(_handle, infoLogLength, &infoLogLength, cInfoLog);
+
+    std::string infoLog = cInfoLog;
+    delete[] cInfoLog;
+
+    return infoLog;
+}
+
 ShaderProgram& ShaderProgram::link(){
     glLinkProgram(_handle);
 
     //Checking for link errors
     int linked;
-    int infoLogLength;
-    char* cInfoLog;
-    std::string infoLog;
     glGetProgramiv(_handle, GL_LINK_STATUS, &linked);
 
     if(!linked){
-       glGetProgramiv(_handle, GL_INFO_LOG_LENGTH, &infoLogLength);
-       cInfoLog = new char[infoLogLength];
-       glGetProgramInfoLog(_handle, infoLogLength, &infoLogLength, cInfoLog);
- 
-       infoLog = cInfoLog;
-       delete[] cInfoLog;
-
-       throw "ShaderProgram Link failed :\n" + infoLog;
+       throw "ShaderProgram Link failed :\n" + this->getInfoLog();
     }
     
     return *this;
@@ -90,35 +94,74 @@ ShaderProgram& ShaderProgram::use(){
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, float f){
-    GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glUniform1f(location, f);
+    int location = glGetUniformLocation(_handle, uniName.c_str());
+    if(location >= 0){
+        glProgramUniform1f(_handle, location, f);
+    }
     return *this;
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, const glm::vec2& v){
-    GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glUniform2fv(location, 1, glm::value_ptr(v));
+    int location = glGetUniformLocation(_handle, uniName.c_str());
+    if(location >= 0){
+        glProgramUniform2fv(_handle, location, 1, glm::value_ptr(v));
+    }
     return *this;
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, const glm::vec3& v){
-    GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glUniform3fv(location, 1, glm::value_ptr(v));
+    int location = glGetUniformLocation(_handle, uniName.c_str());
+    if(location >= 0){
+        glProgramUniform3fv(_handle, location, 1, glm::value_ptr(v));
+    }
     return *this;
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, const glm::vec4& v){
-    GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glUniform4fv(location, 1, glm::value_ptr(v));
+    int location = glGetUniformLocation(_handle, uniName.c_str());
+    if(location >= 0){
+        glProgramUniform4fv(_handle, location, 1, glm::value_ptr(v));
+    }
     return *this;
 }
 
 ShaderProgram& ShaderProgram::uni(const std::string& uniName, Texture& tex){
-    GLuint location = glGetUniformLocation(_handle, uniName.c_str());
-    glUniform1i(location, tex.activate());
+    int location = glGetUniformLocation(_handle, uniName.c_str());
+
+    if(location >= 0){
+        int value;
+        int type = this->getUniformType(uniName);
+        if(ShaderProgram::isSamplerType(type)){
+            value = tex.activate();
+        }else{
+            value = tex.activateAsImage();
+        }
+
+        glProgramUniform1i(_handle, location, tex.activate());
+    }
     return *this;
 }
 
+bool ShaderProgram::isSamplerType(unsigned int type){
+    return type == GL_SAMPLER_1D ||
+           type == GL_SAMPLER_2D ||
+           type == GL_SAMPLER_3D ||
+           type == GL_SAMPLER_BUFFER;
+    //TODO make the complete list
+}
+
+unsigned int ShaderProgram::getUniformType(const std::string& uniName){
+    GLuint uniformIndice;
+    char const * cName = uniName.c_str();
+    glGetUniformIndices(_handle, 1, &cName, &uniformIndice);
+
+    GLuint type;
+    char miniBuf;
+    int size;
+    glGetActiveUniform(_handle, uniformIndice, 0, nullptr, &size, &type, &miniBuf);
+
+    return type;
+}
 
 GLuint ShaderProgram::getHandle(){
     return _handle;
