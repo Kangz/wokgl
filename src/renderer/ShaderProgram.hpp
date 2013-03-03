@@ -17,6 +17,7 @@ class ShaderProgram{
         ShaderProgram& attach(Shader& shader);
         ShaderProgram& detach(Shader& shader);
         ShaderProgram& bindAttrib(int position, const std::string& attribName);
+        std::string getInfoLog();
         ShaderProgram& link();
         ShaderProgram& use();
         

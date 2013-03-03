@@ -40,25 +40,29 @@ ShaderProgram& ShaderProgram::bindAttrib(int position, const std::string& attrib
     return *this;
 }
 
+std::string ShaderProgram::getInfoLog(){
+    int infoLogLength;
+    char* cInfoLog;
+
+    glGetProgramiv(_handle, GL_INFO_LOG_LENGTH, &infoLogLength);
+    cInfoLog = new char[infoLogLength];
+    glGetProgramInfoLog(_handle, infoLogLength, &infoLogLength, cInfoLog);
+
+    std::string infoLog = cInfoLog;
+    delete[] cInfoLog;
+
+    return infoLog;
+}
+
 ShaderProgram& ShaderProgram::link(){
     glLinkProgram(_handle);
 
     //Checking for link errors
     int linked;
-    int infoLogLength;
-    char* cInfoLog;
-    std::string infoLog;
     glGetProgramiv(_handle, GL_LINK_STATUS, &linked);
 
     if(!linked){
-       glGetProgramiv(_handle, GL_INFO_LOG_LENGTH, &infoLogLength);
-       cInfoLog = new char[infoLogLength];
-       glGetProgramInfoLog(_handle, infoLogLength, &infoLogLength, cInfoLog);
- 
-       infoLog = cInfoLog;
-       delete[] cInfoLog;
-
-       throw "ShaderProgram Link failed :\n" + infoLog;
+       throw "ShaderProgram Link failed :\n" + this->getInfoLog();
     }
     
     return *this;
