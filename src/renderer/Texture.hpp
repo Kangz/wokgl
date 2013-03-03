@@ -19,6 +19,7 @@ class Texture{ //TODO Change this to Texture2D sometime
         int activate();
         int activateAsImage();
         Texture& bind();
+        Texture& unbind();
         Texture& dataFromBuffer(const Buffer& buf);
         Texture& emptyData(int width, int height);
         Texture& loadSurface(SDL_Surface* surface);

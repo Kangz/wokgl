@@ -37,10 +37,16 @@ Texture& Texture::bind(){
     return *this;
 }
 
+Texture& Texture::unbind(){
+	glBindTexture(static_cast<int>(_target), 0);
+    return *this;
+}
+
 Texture& Texture::dataFromBuffer(const Buffer& buf){
     this->_target = TextureTarget::TextureBuffer;
     this->bind().applyWrapAndFilter();
     glTexBuffer(GL_TEXTURE_BUFFER, static_cast<int>(_format), buf);
+    this->unbind();
     return *this;
 }
 
@@ -49,6 +55,7 @@ Texture& Texture::emptyData(int width, int height){
     this->bind().applyWrapAndFilter();
 	glTexImage2D(GL_TEXTURE_2D, 0, static_cast<int>(_format), width, height, 0,
             GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    this->unbind();
     return *this;
 }
 
@@ -84,6 +91,7 @@ Texture& Texture::loadSurface(SDL_Surface* surface){
     glTexImage2D(GL_TEXTURE_2D, 0, static_cast<int>(_format), w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,
             convertedSurface->pixels);
     
+    this->unbind();
     return *this;
 }
 
@@ -146,8 +154,6 @@ Texture& Texture::setTarget(TextureTarget target){
 }
 
 Texture& Texture::applyWrapAndFilter(){
-    this->bind();
-
     //TODO: do a nicer check ?
     if(_target != TextureTarget::TextureBuffer){
         int target = static_cast<int>(_target);

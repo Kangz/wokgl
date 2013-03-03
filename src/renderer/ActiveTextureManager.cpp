@@ -36,11 +36,11 @@ int ActiveTextureManager::activate(Texture* tex){
         unit = tex->getLastImageUnit();
     }
     _count ++;
-    if(unit >= 0 && _boundTexture[unit] == tex){
+    if(unit >= 1 && _boundTexture[unit] == tex){
         _lastBoundTime[unit] = _count;
         return unit;
     }
-    int minUnit = 0;
+    int minUnit = 1;
     for(int i=1; i<_nUnits; i++){
         if(_lastBoundTime[i] < _lastBoundTime[minUnit]){
             minUnit = i;
@@ -52,11 +52,15 @@ int ActiveTextureManager::activate(Texture* tex){
     _activeUnit = minUnit;
     if(_type == ActiveManagerType::Sampler){
         glActiveTexture(GL_TEXTURE0 + minUnit);
+        tex->bind();
+        glActiveTexture(GL_TEXTURE0);
+        tex->unbind();
     }else{
         glBindImageTexture(minUnit, *tex, 0, GL_FALSE, 0, GL_READ_WRITE,
                 static_cast<int>(tex->getFormat()));
     }
-    tex->bind();
+
+    std::cout << tex << "    " << minUnit << "    " << static_cast<int>(_type) << std::endl;
 
     return minUnit;
 }
