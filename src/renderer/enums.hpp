@@ -89,6 +89,12 @@ enum class TextureFormat{
    RG32F = GL_RG32F,
    RGB32F = GL_RGB32F,
    RGBA32F = GL_RGBA32F,
+
+   //32 Bits Signed Integers
+   R32I = GL_R32I,
+   RG32I = GL_RG32I,
+   RGB32I = GL_RGB32I,
+   RGBA32I = GL_RGBA32I,
 };
 
 enum class TextureTarget{
