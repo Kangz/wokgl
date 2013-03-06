@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "compute/compute.hpp"
 #include "HistoPyramid.hpp"
 
