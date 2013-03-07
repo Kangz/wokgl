@@ -33,7 +33,7 @@ const std::string gridProgramSource = ""
     "";
 
 //TODO: use glClearBufferData
-static float bigBuffer[100000];
+static float bigBuffer[1000000];
 
 ParticleGrid::ParticleGrid(compute::Context& context, int gridSize, int particleCount):
     _gridSize(gridSize),
