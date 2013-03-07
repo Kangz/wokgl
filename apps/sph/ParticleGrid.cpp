@@ -11,20 +11,22 @@ const std::string gridProgramSource = ""
     "}\n"
     "\n"
     "\n"
-    "kernel void count(read_only global float* particles, volatile global int* count){\n"
+    "kernel void count(read_only global float* particles, volatile global int* count,\n"
+    "               const int gridSize){\n"
     "   int i = get_global_id(0) * PARTICLE_SIZE;\n"
-    "   int x = floor(particles[i + PARTICLE_POS_X] * 32);\n"
-    "   int y = floor(particles[i + PARTICLE_POS_Y] * 32);\n"
-    "   atomic_add(&count[x + 32 * y], 1);\n"
+    "   int x = floor(particles[i + PARTICLE_POS_X] * gridSize);\n"
+    "   int y = floor(particles[i + PARTICLE_POS_Y] * gridSize);\n"
+    "   atomic_add(&count[x + gridSize * y], 1);\n"
     "}\n"
     "\n"
     "\n"
     "kernel void place(read_only global float* particles, read_only global int* offset,\n"
-    "               volatile global int* counters, write_only global int* array){\n"
+    "               volatile global int* counters, write_only global int* array,\n"
+    "               const int gridSize){\n"
     "   int i = get_global_id(0) * PARTICLE_SIZE;\n"
-    "   int x = floor(particles[i + PARTICLE_POS_X] * 32);\n"
-    "   int y = floor(particles[i + PARTICLE_POS_Y] * 32);\n"
-    "   int cell = x + 32 * y;\n"
+    "   int x = floor(particles[i + PARTICLE_POS_X] * gridSize);\n"
+    "   int y = floor(particles[i + PARTICLE_POS_Y] * gridSize);\n"
+    "   int cell = x + gridSize * y;\n"
     "   int number = atomic_add(&counters[cell], 1);\n"
     "   array[offset[cell] + number] = i;\n"
     "}\n"
@@ -75,11 +77,11 @@ void ParticleGrid::update(compute::CommandQueue commands, compute::Buffer partic
     commands.range(_zeroKernel).global(_gridSize * _gridSize).apply(_gridSizeCL);
     commands.range(_zeroKernel).global(_gridSize * _gridSize).apply(gridCurrentPos);
 
-    commands.range(_countKernel).global(_particleCount).apply(particles, _gridSizeCL);
+    commands.range(_countKernel).global(_particleCount).apply(particles, _gridSizeCL, _gridSize);
 
     _histo.compute(commands, _gridSizeCL, _gridSize * _gridSize, _gridOffsetCL);
 
-    commands.range(_placeKernel).global(_particleCount).apply(particles, _gridOffsetCL, gridCurrentPos, _gridArrayCL);
+    commands.range(_placeKernel).global(_particleCount).apply(particles, _gridOffsetCL, gridCurrentPos, _gridArrayCL, _gridSize);
 
     commands.release(_gridSizeCL).apply();
     commands.release(_gridOffsetCL).apply();
