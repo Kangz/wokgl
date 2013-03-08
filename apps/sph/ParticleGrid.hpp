@@ -21,9 +21,16 @@ class ParticleGrid{
 
         void update(compute::CommandQueue commands, compute::Buffer particles);
 
+        void acquireCL(compute::CommandQueue commands);
+        void releaseCL(compute::CommandQueue commands);
+
         renderer::Texture& getSizeTexture();
         renderer::Texture& getOffsetTexture();
         renderer::Texture& getArrayTexture();
+
+        compute::Buffer& getSizeCL();
+        compute::Buffer& getOffsetCL();
+        compute::Buffer& getArrayCL();
 
     private:
         int _gridSize;

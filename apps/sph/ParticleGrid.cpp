@@ -69,9 +69,7 @@ ParticleGrid::ParticleGrid(compute::Context& context, int gridSize, int particle
 }
 
 void ParticleGrid::update(compute::CommandQueue commands, compute::Buffer particles){
-    commands.acquire(_gridSizeCL).apply();
-    commands.acquire(_gridOffsetCL).apply();
-    commands.acquire(_gridArrayCL).apply();
+    this->acquireCL(commands);
 
     compute::Buffer gridCurrentPos = _context.createBuffer(_gridSizeCL.getFullSize());
     commands.range(_zeroKernel).global(_gridSize * _gridSize).apply(_gridSizeCL);
@@ -83,6 +81,16 @@ void ParticleGrid::update(compute::CommandQueue commands, compute::Buffer partic
 
     commands.range(_placeKernel).global(_particleCount).apply(particles, _gridOffsetCL, gridCurrentPos, _gridArrayCL, _gridSize);
 
+    this->releaseCL(commands);
+}
+
+void ParticleGrid::acquireCL(compute::CommandQueue commands){
+    commands.acquire(_gridSizeCL).apply();
+    commands.acquire(_gridOffsetCL).apply();
+    commands.acquire(_gridArrayCL).apply();
+}
+
+void ParticleGrid::releaseCL(compute::CommandQueue commands){
     commands.release(_gridSizeCL).apply();
     commands.release(_gridOffsetCL).apply();
     commands.release(_gridArrayCL).apply();
@@ -98,5 +106,17 @@ renderer::Texture& ParticleGrid::getOffsetTexture(){
 
 renderer::Texture& ParticleGrid::getArrayTexture(){
     return _gridArrayTex;
+}
+
+compute::Buffer& ParticleGrid::getSizeCL(){
+    return _gridSizeCL;
+}
+
+compute::Buffer& ParticleGrid::getOffsetCL(){
+    return _gridOffsetCL;
+}
+
+compute::Buffer& ParticleGrid::getArrayCL(){
+    return _gridArrayCL;
 }
 
