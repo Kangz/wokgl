@@ -5,9 +5,9 @@
 #include "ParticleGrid.hpp"
 #include "ParticleSimulator.hpp"
 
-ParticleSimulator::ParticleSimulator(compute::Context& context, int gridSize, int particleCount, float radius)
-:_gridSize(gridSize), _particleCount(particleCount), _radius(radius),
-_program(context.programFromSource(PARTICLE_HEADER + loadFile("apps/sph/gpu/simulation.cl"))),
+ParticleSimulator::ParticleSimulator(compute::Context& context, int gridSize, int particleCount)
+:_gridSize(gridSize), _particleCount(particleCount),
+_program(context.programFromSource(getParticleHeader() + loadFile("apps/sph/gpu/simulation.cl"))),
 _context(context){
     _program.build();
 
@@ -23,20 +23,20 @@ _context(context){
 
 
 void ParticleSimulator::advect(compute::CommandQueue& commands, compute::Buffer& oldParticles, compute::Buffer& newParticles){
-    commands.range(_advectKernel).global(_particleCount).apply(oldParticles, newParticles, 0.001f);
+    commands.range(_advectKernel).global(_particleCount).apply(oldParticles, newParticles);
 }
 
 void ParticleSimulator::computeAverageWeight(compute::CommandQueue& commands, compute::Buffer& particles, ParticleGrid& grid){
     grid.acquireCL(commands);
     commands.range(_computeAverageWeightKernel).global(_particleCount).apply(particles,
-                grid.getSizeCL(), grid.getOffsetCL(), grid.getArrayCL(), _gridSize, _radius, 3.0f, 2.0f);
+                grid.getSizeCL(), grid.getOffsetCL(), grid.getArrayCL(), _gridSize);
     grid.releaseCL(commands);
 }
 
 void ParticleSimulator::computeAccel(compute::CommandQueue& commands, compute::Buffer& particles, ParticleGrid& grid){
     grid.acquireCL(commands);
     commands.range(_computeAccelKernel).global(_particleCount).apply(particles,
-                grid.getSizeCL(), grid.getOffsetCL(), grid.getArrayCL(), _gridSize, _radius);
+                grid.getSizeCL(), grid.getOffsetCL(), grid.getArrayCL(), _gridSize);
     grid.releaseCL(commands);
 }
 

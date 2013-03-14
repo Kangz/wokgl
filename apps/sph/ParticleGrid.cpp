@@ -17,7 +17,7 @@ ParticleGrid::ParticleGrid(compute::Context& context, int gridSize, int particle
     _gridOffsetTex(renderer::TextureFormat::R32I),
     _gridArrayBuffer(renderer::BufferUsage::DynamicDraw, particleCount, bigBuffer),
     _gridArrayTex(renderer::TextureFormat::R32I),
-    _program(context.programFromSource(PARTICLE_HEADER + loadFile("apps/sph/gpu/grid.cl"))),
+    _program(context.programFromSource(getParticleHeader() + loadFile("apps/sph/gpu/grid.cl"))),
     _context(context),
     _histo(context){
 

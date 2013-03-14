@@ -1,3 +1,6 @@
+#ifndef SPH_PARTICLE_H
+#define SPH_PARTICLE_H
+
 #include <string>
 
 #define PARTICLE_SIZE 8
@@ -14,17 +17,12 @@
 #define PARTICLE_ACCEL_X 6
 #define PARTICLE_ACCEL_Y 7
 
-const std::string PARTICLE_HEADER = ""
-"#define PARTICLE_SIZE 8\n"
+std::string getParticleHeader();
 
-"#define PARTICLE_POS 0\n"
-"#define PARTICLE_POS_X 0\n"
-"#define PARTICLE_POS_Y 1\n"
-"#define PARTICLE_SPEED 2\n"
-"#define PARTICLE_SPEED_X 2\n"
-"#define PARTICLE_SPEED_Y 3\n"
-"#define PARTICLE_AVERAGE_WEIGHT 4\n"
-"#define PARTICLE_PRESSURE 5\n"
-"#define PARTICLE_ACCEL_X 6\n"
-"#define PARTICLE_ACCEL_Y 7\n"
-;
+void setMass(float mass);
+void setRadius(float radius);
+void setCelerity(float celerity);
+void setRho0(float rho0);
+void setTimestep(float timestep);
+
+#endif //SPH_PARTICLE_H

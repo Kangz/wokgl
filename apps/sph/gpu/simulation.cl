@@ -1,9 +1,9 @@
 #define EPSILON 0.0001f
-#define FORGRID(posx, posy, radius, particle_result)\
-   int startx = max(0, (int)floor(((posx) - radius) * gridDim) - 1000);\
-   int starty = max(0, (int)floor(((posy) - radius) * gridDim) - 1000);\
-   int endx = min(gridDim, (int)ceil(((posx) + radius) * gridDim) + 1000);\
-   int endy = min(gridDim, (int)ceil(((posy) + radius) * gridDim) + 1000);\
+#define FORGRID(posx, posy, particle_result)\
+   int startx = max(0, (int)floor(((posx) - RADIUS) * gridDim) - 1000);\
+   int starty = max(0, (int)floor(((posy) - RADIUS) * gridDim) - 1000);\
+   int endx = min(gridDim, (int)ceil(((posx) + RADIUS) * gridDim) + 1000);\
+   int endy = min(gridDim, (int)ceil(((posy) + RADIUS) * gridDim) + 1000);\
    for(int x = startx; x < endx; x++){\
        for(int y = starty; y < endy; y++){\
            int cell = x + gridDim * y;\
@@ -16,15 +16,14 @@
 
 #define ENDFORGRID }}}}
 
-kernel void advect(read_only global float* oldParticles, write_only global float* newParticles, const float mass){
-   float timestep = 0.03f;
+kernel void advect(read_only global float* oldParticles, write_only global float* newParticles){
    int i = get_global_id(0) * PARTICLE_SIZE;
    float accelx = oldParticles[i + PARTICLE_ACCEL_X];
    float accely = oldParticles[i + PARTICLE_ACCEL_Y];
-   float speedx = oldParticles[i + PARTICLE_SPEED_X] + accelx * mass * timestep;
-   float speedy = oldParticles[i + PARTICLE_SPEED_Y] + accely * mass * timestep - 0.0 * timestep / 100;
-   float newposx = oldParticles[i + PARTICLE_POS_X] + speedx * timestep;
-   float newposy = oldParticles[i + PARTICLE_POS_Y] + speedy * timestep;
+   float speedx = oldParticles[i + PARTICLE_SPEED_X] + accelx * MASS * TIMESTEP;
+   float speedy = oldParticles[i + PARTICLE_SPEED_Y] + accely * MASS * TIMESTEP - 0.0 * TIMESTEP / 100;
+   float newposx = oldParticles[i + PARTICLE_POS_X] + speedx * TIMESTEP;
+   float newposy = oldParticles[i + PARTICLE_POS_Y] + speedy * TIMESTEP;
 /*
    if(newposx < 0.0f + EPSILON){ newposx = 0.0f + EPSILON; speedx = + EPSILON;}
    if(newposx > 1.0f - EPSILON){ newposx = 1.0f - EPSILON; speedx = - EPSILON;}
@@ -67,25 +66,24 @@ float dW(float dist, float h){
 }
 
 kernel void computeAverageWeight(global float* particles, read_only global int* gridSize,
-       read_only global int* gridOffset, read_only global int* gridArray, int gridDim, float radius,
-       const float c, const float weight0){
+       read_only global int* gridOffset, read_only global int* gridArray, int gridDim){
    int i = get_global_id(0) * PARTICLE_SIZE;
    float posx = particles[i + PARTICLE_POS_X];
    float posy = particles[i + PARTICLE_POS_Y];
    float weight = 0.0f;
    int index;
-   FORGRID(posx, posy, radius, index){
+   FORGRID(posx, posy, index){
        float dx = posx - particles[index + PARTICLE_POS_X];
        float dy = posy - particles[index + PARTICLE_POS_Y];
        float dist = sqrt(dx * dx + dy * dy);
-       weight += W(dist, radius);
+       weight += W(dist, RADIUS);
    }ENDFORGRID
    particles[i + PARTICLE_AVERAGE_WEIGHT] = weight;
-   particles[i + PARTICLE_PRESSURE] = c * c * (weight - weight0);
+   particles[i + PARTICLE_PRESSURE] = CELERITY * CELERITY * (weight - RHO0);
 }
 
 kernel void computeAccel(global float* particles, read_only global int* gridSize,
-       read_only global int* gridOffset, read_only global int* gridArray, int gridDim, float radius){
+       read_only global int* gridOffset, read_only global int* gridArray, int gridDim){
    int i = get_global_id(0) * PARTICLE_SIZE;
    float posx = particles[i + PARTICLE_POS_X];
    float posy = particles[i + PARTICLE_POS_Y];
@@ -94,13 +92,13 @@ kernel void computeAccel(global float* particles, read_only global int* gridSize
    int index;
    float accelx = 0.0f;
    float accely = 0.0f;
-   FORGRID(posx, posy, radius, index){
+   FORGRID(posx, posy, index){
        float dx = posx - particles[index + PARTICLE_POS_X];
        float dy = posy - particles[index + PARTICLE_POS_Y];
        float other_w = particles[index + PARTICLE_AVERAGE_WEIGHT];
        float other_p = particles[index + PARTICLE_PRESSURE];
        float dist = sqrt(dx * dx + dy * dy);
-       float factor = - (own_p / own_w / own_w + other_p / other_w / other_w) / max(0.00000001, dist) * dW(dist, radius);
+       float factor = - (own_p / own_w / own_w + other_p / other_w / other_w) / max(0.00000001, dist) * dW(dist, RADIUS);
        accelx += dx * factor;
        accely += dy * factor;
    }ENDFORGRID
