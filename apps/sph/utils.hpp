@@ -3,6 +3,6 @@
 
 #include <string>
 
-std::string loadFile(const char *filename){
+std::string loadFile(const char *filename);
 
 #endif //SPH_UTILS_HPP

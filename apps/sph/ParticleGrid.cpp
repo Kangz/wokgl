@@ -1,36 +1,9 @@
 #include "renderer/renderer.hpp"
 #include "compute/compute.hpp"
 
+#include "utils.hpp"
 #include "particle.h"
 #include "ParticleGrid.hpp"
-
-const std::string gridProgramSource = ""
-    + PARTICLE_HEADER +
-    "kernel void zero(write_only global int* buffer){\n"
-    "   buffer[get_global_id(0)] = 0;\n"
-    "}\n"
-    "\n"
-    "\n"
-    "kernel void count(read_only global float* particles, volatile global int* count,\n"
-    "               const int gridSize){\n"
-    "   int i = get_global_id(0) * PARTICLE_SIZE;\n"
-    "   int x = floor(particles[i + PARTICLE_POS_X] * gridSize);\n"
-    "   int y = floor(particles[i + PARTICLE_POS_Y] * gridSize);\n"
-    "   atomic_add(&count[x + gridSize * y], 1);\n"
-    "}\n"
-    "\n"
-    "\n"
-    "kernel void place(read_only global float* particles, read_only global int* offset,\n"
-    "               volatile global int* counters, write_only global int* array,\n"
-    "               const int gridSize){\n"
-    "   int i = get_global_id(0) * PARTICLE_SIZE;\n"
-    "   int x = floor(particles[i + PARTICLE_POS_X] * gridSize);\n"
-    "   int y = floor(particles[i + PARTICLE_POS_Y] * gridSize);\n"
-    "   int cell = x + gridSize * y;\n"
-    "   int number = atomic_add(&counters[cell], 1);\n"
-    "   array[offset[cell] + number] = i;\n"
-    "}\n"
-    "";
 
 //TODO: use glClearBufferData
 static float bigBuffer[1000000];
@@ -44,7 +17,7 @@ ParticleGrid::ParticleGrid(compute::Context& context, int gridSize, int particle
     _gridOffsetTex(renderer::TextureFormat::R32I),
     _gridArrayBuffer(renderer::BufferUsage::DynamicDraw, particleCount, bigBuffer),
     _gridArrayTex(renderer::TextureFormat::R32I),
-    _program(context.programFromSource(gridProgramSource)),
+    _program(context.programFromSource(PARTICLE_HEADER + loadFile("apps/sph/gpu/grid.cl"))),
     _context(context),
     _histo(context){
 
