@@ -2,7 +2,7 @@
 #include "compute/compute.hpp"
 
 #include "utils.hpp"
-#include "particle.h"
+#include "particle.hpp"
 #include "ParticleGrid.hpp"
 
 //TODO: use glClearBufferData
