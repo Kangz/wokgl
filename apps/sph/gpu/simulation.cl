@@ -65,12 +65,27 @@ float dW(float dist, float h){
    }
 }
 
+float laplacianW(float dist, float h){
+   const float x = dist / h;
+   float result;
+   if(x < 0.5f){
+       result = (36 * x - 12) / h / h;
+   }else if(x < 1.0f){
+       const float y = 1 - x;
+       result = - 4 / h / h * y;
+   }else{
+       return 0;
+   }
+   return result + dW(dist, h) / max(0.000001, x);
+}
+
+
 kernel void computeAverageWeight(global float* particles, read_only global int* gridSize,
        read_only global int* gridOffset, read_only global int* gridArray, int gridDim){
    int i = get_global_id(0) * PARTICLE_SIZE;
    float posx = particles[i + PARTICLE_POS_X];
    float posy = particles[i + PARTICLE_POS_Y];
-   float weight = 0.0f;
+   float weight = 1.0f; //Count its own weight
    int index;
    FORGRID(posx, posy, index){
        float dx = posx - particles[index + PARTICLE_POS_X];
