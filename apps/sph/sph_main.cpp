@@ -69,12 +69,6 @@ void initParticles(){
     nextParticles = particlesB;
 }
 
-//Configuration state
-float mouseSpeedX = 0.0;
-float mouseSpeedY = 0.0;
-float mousePosX = 0.0;
-float mousePosY = 0.0;
-float gravity = true;
 
 bool run(SDL_Window* window){
     rng.seed(0);
@@ -96,38 +90,67 @@ bool run(SDL_Window* window){
 
     int lastTicks = SDL_GetTicks();
     bool running = true;
+
+    //Configuration state
+    float mouseSpeedX = 0.0;
+    float mouseSpeedY = 0.0;
+    float mousePosX = 0.0;
+    float mousePosY = 0.0;
+    float gravity = true;
+    bool paused = false;
+
+    bool drawMeta = true;
+    bool drawDots = true;
+    bool drawCursor = true;
+    bool drewSomething = true;
     while(running){
         //Does one step of the simulation
-        commands.acquire(currentParticles->bufferCL).apply();
-        commands.acquire(nextParticles->bufferCL).apply();
-        {
-            simulator.advect(commands, currentParticles->bufferCL, nextParticles->bufferCL, gravity ? 4.0 : 0.0);
-            grid.update(commands, nextParticles->bufferCL);
-            simulator.computeAverageWeight(commands, nextParticles->bufferCL, grid);
+        if(!paused){
+            commands.acquire(currentParticles->bufferCL).apply();
+            commands.acquire(nextParticles->bufferCL).apply();
+            {
+                simulator.advect(commands, currentParticles->bufferCL, nextParticles->bufferCL, gravity ? 4.0 : 0.0);
+                grid.update(commands, nextParticles->bufferCL);
+                simulator.computeAverageWeight(commands, nextParticles->bufferCL, grid);
 
-            if(mouseSpeedX != 0.0 || mouseSpeedY != 0.0){
-                simulator.addSpeed(commands, nextParticles->bufferCL, mousePosX, mousePosY, INTERACTION_RADIUS, mouseSpeedX, mouseSpeedY);
+                if(mouseSpeedX != 0.0 || mouseSpeedY != 0.0){
+                    simulator.addSpeed(commands, nextParticles->bufferCL, mousePosX, mousePosY, INTERACTION_RADIUS, mouseSpeedX, mouseSpeedY);
 
-                mouseSpeedX = 0.0;
-                mouseSpeedY = 0.0;
+                    mouseSpeedX = 0.0;
+                    mouseSpeedY = 0.0;
+                }
+
+                simulator.computeAccel(commands, nextParticles->bufferCL, grid);
             }
-
-            simulator.computeAccel(commands, nextParticles->bufferCL, grid);
+            commands.release(currentParticles->bufferCL).apply();
+            commands.release(nextParticles->bufferCL).apply();
         }
-        commands.release(currentParticles->bufferCL).apply();
-        commands.release(nextParticles->bufferCL).apply();
 
         //Wait for OpenCL
         commands.waitFinish();
 
-        renderer::FrameBuffer::clearColor(0.0, 0.0, 0.0, 0.0);
+        if(drewSomething){
+            renderer::FrameBuffer::clearColor(0.0, 0.0, 0.0, 0.0);
+        }
 
         //Draw everything
-        drawer.drawDots(grid, nextParticles->tex);
-        drawer.drawInteractionRadius(mousePosX, mousePosY, INTERACTION_RADIUS, lastTicks);
+        if(drawMeta){
+            drawer.drawMeta(grid, nextParticles->tex, 100000.0);
+            drewSomething = true;
+        }
+        if(drawDots){
+            drawer.drawDots(grid, nextParticles->tex);
+            drewSomething = true;
+        }
+        if(drawCursor){
+            drawer.drawInteractionRadius(mousePosX, mousePosY, INTERACTION_RADIUS, lastTicks);
+            drewSomething = true;
+        }
 
-        //Wait for OpenGL (SwapWindow has an implicit call to glFinish)
-        SDL_GL_SwapWindow(window);
+        if(drewSomething){
+            //Wait for OpenGL (SwapWindow has an implicit call to glFinish)
+            SDL_GL_SwapWindow(window);
+        }
 
         //Get the time delta to compute the mouse speed
         int currentTicks = SDL_GetTicks();
@@ -148,8 +171,24 @@ bool run(SDL_Window* window){
                             return running = false;
                             break;
 
+                        case SDLK_p:
+                            paused = !paused;
+                            break;
+
                         case SDLK_g:
                             gravity = !gravity;
+                            break;
+
+                        case SDLK_m:
+                            drawMeta = !drawMeta;
+                            break;
+
+                        case SDLK_d:
+                            drawDots = !drawDots;
+                            break;
+
+                        case SDLK_c:
+                            drawCursor = !drawCursor;
                             break;
 
                         default:
@@ -176,8 +215,10 @@ bool run(SDL_Window* window){
             }
         }
 
-        //The new particles are the old particles
-        std::swap(currentParticles, nextParticles);
+        if(!paused){
+            //The new particles are the old particles
+            std::swap(currentParticles, nextParticles);
+        }
    }
 
     return true;

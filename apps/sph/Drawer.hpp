@@ -17,6 +17,7 @@ class Drawer{
         Drawer(int gridSize, int nParticles);
         void drawDots(ParticleGrid& grid, renderer::Texture& particles);
         void drawInteractionRadius(float x, float y, float r, int ticks);
+        void drawMeta(ParticleGrid& grid, renderer::Texture& particles, float threshold);
 
     private:
         int _gridSize;
@@ -31,6 +32,9 @@ class Drawer{
 
         renderer::FragmentShader _radiusFs;
         renderer::ShaderProgram _radiusProgram;
+
+        renderer::FragmentShader _metaFs;
+        renderer::ShaderProgram _metaProgram;
 
 };
 
