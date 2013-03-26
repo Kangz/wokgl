@@ -3,7 +3,7 @@
 
 #include <string>
 
-#define PARTICLE_SIZE 8
+#define PARTICLE_SIZE 10
 #define PARTICLE_FULLSIZE (PARTICLE_SIZE * sizeof(float))
 
 #define PARTICLE_POS 0
@@ -16,6 +16,8 @@
 #define PARTICLE_PRESSURE 5
 #define PARTICLE_ACCEL_X 6
 #define PARTICLE_ACCEL_Y 7
+#define PARTICLE_FORCE_X 8
+#define PARTICLE_FORCE_Y 9
 
 std::string getParticleHeader();
 
@@ -24,5 +26,6 @@ void setRadius(float radius);
 void setCelerity(float celerity);
 void setRho0(float rho0);
 void setTimestep(float timestep);
+void setMu(float mu);
 
 #endif //SPH_PARTICLE_H

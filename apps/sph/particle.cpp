@@ -3,7 +3,7 @@
 #include "particle.hpp"
 
 const std::string PARTICLE_HEADER = ""
-    "#define PARTICLE_SIZE 8\n"
+    "#define PARTICLE_SIZE 10\n"
 
     "#define PARTICLE_POS 0\n"
     "#define PARTICLE_POS_X 0\n"
@@ -15,6 +15,8 @@ const std::string PARTICLE_HEADER = ""
     "#define PARTICLE_PRESSURE 5\n"
     "#define PARTICLE_ACCEL_X 6\n"
     "#define PARTICLE_ACCEL_Y 7\n"
+    "#define PARTICLE_FORCE_X 8\n"
+    "#define PARTICLE_FORCE_Y 9\n"
     ;
 
 float _mass;
@@ -22,6 +24,7 @@ float _radius;
 float _celerity;
 float _rho0;
 float _timestep;
+float _mu;
 
 std::string getParticleHeader(){
     std::ostringstream o;
@@ -31,6 +34,7 @@ std::string getParticleHeader(){
     o << "#define CELERITY " << _celerity << std::endl;
     o << "#define RHO0 " << _rho0 << std::endl;
     o << "#define TIMESTEP " << _timestep << std::endl;
+    o << "#define MU " << _mu << std::endl;
     return o.str();
 }
 
@@ -52,5 +56,9 @@ void setRho0(float rho0){
 
 void setTimestep(float timestep){
     _timestep = timestep;
+}
+
+void setMu(float mu){
+    _mu = mu;
 }
 
