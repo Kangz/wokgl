@@ -19,7 +19,8 @@ constexpr int N_PARTICLES_SQRT = 150;
 constexpr int N_PARTICLES = N_PARTICLES_SQRT * N_PARTICLES_SQRT;
 constexpr int GRID_SIZE = N_PARTICLES_SQRT * 2;
 constexpr float RADIUS = 1.0 / 2 / GRID_SIZE * 3 * 2;
-constexpr float INTERACTION_RADIUS = 0.1;
+constexpr float INTERACTION_RADIUS = 0.03333;
+constexpr float META_THRESHOLD = 100000.0;
 
 std::mt19937 rng;
 
@@ -103,6 +104,7 @@ bool run(SDL_Window* window){
     bool drawDots = true;
     bool drawCursor = true;
     bool drewSomething = true;
+    int interactionSize = 3;
     while(running){
         //Does one step of the simulation
         if(!paused){
@@ -114,7 +116,7 @@ bool run(SDL_Window* window){
                 simulator.computeAverageWeight(commands, nextParticles->bufferCL, grid);
 
                 if(mouseSpeedX != 0.0 || mouseSpeedY != 0.0){
-                    simulator.addSpeed(commands, nextParticles->bufferCL, mousePosX, mousePosY, INTERACTION_RADIUS, mouseSpeedX, mouseSpeedY);
+                    simulator.addSpeed(commands, nextParticles->bufferCL, mousePosX, mousePosY, INTERACTION_RADIUS * interactionSize, mouseSpeedX, mouseSpeedY);
 
                     mouseSpeedX = 0.0;
                     mouseSpeedY = 0.0;
@@ -135,7 +137,7 @@ bool run(SDL_Window* window){
 
         //Draw everything
         if(drawMeta){
-            drawer.drawMeta(grid, nextParticles->tex, 100000.0);
+            drawer.drawMeta(grid, nextParticles->tex, META_THRESHOLD);
             drewSomething = true;
         }
         if(drawDots){
@@ -143,7 +145,7 @@ bool run(SDL_Window* window){
             drewSomething = true;
         }
         if(drawCursor){
-            drawer.drawInteractionRadius(mousePosX, mousePosY, INTERACTION_RADIUS, lastTicks);
+            drawer.drawInteractionRadius(mousePosX, mousePosY, INTERACTION_RADIUS * interactionSize, lastTicks);
             drewSomething = true;
         }
 
@@ -189,6 +191,20 @@ bool run(SDL_Window* window){
 
                         case SDLK_c:
                             drawCursor = !drawCursor;
+                            break;
+
+                        case SDLK_v:
+                            interactionSize --;
+                            if(interactionSize < 1){
+                                interactionSize = 1;
+                            }
+                            break;
+
+                        case SDLK_b:
+                            interactionSize ++;
+                            if(interactionSize > 10){
+                                interactionSize = 10;
+                            }
                             break;
 
                         default:
