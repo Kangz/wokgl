@@ -19,6 +19,7 @@ constexpr int N_PARTICLES_SQRT = 150;
 constexpr int N_PARTICLES = N_PARTICLES_SQRT * N_PARTICLES_SQRT;
 constexpr int GRID_SIZE = N_PARTICLES_SQRT * 2;
 constexpr float RADIUS = 1.0 / 2 / GRID_SIZE * 3 * 2;
+constexpr float INTERACTION_RADIUS = 0.1;
 
 std::mt19937 rng;
 
@@ -105,7 +106,7 @@ bool run(SDL_Window* window){
             simulator.computeAverageWeight(commands, nextParticles->bufferCL, grid);
 
             if(mouseSpeedX != 0.0 || mouseSpeedY != 0.0){
-                simulator.addSpeed(commands, nextParticles->bufferCL, mousePosX, mousePosY, 0.1, mouseSpeedX, mouseSpeedY);
+                simulator.addSpeed(commands, nextParticles->bufferCL, mousePosX, mousePosY, INTERACTION_RADIUS, mouseSpeedX, mouseSpeedY);
 
                 mouseSpeedX = 0.0;
                 mouseSpeedY = 0.0;
@@ -119,8 +120,11 @@ bool run(SDL_Window* window){
         //Wait for OpenCL
         commands.waitFinish();
 
+        renderer::FrameBuffer::clearColor(0.0, 0.0, 0.0, 0.0);
+
         //Draw everything
         drawer.drawDots(grid, nextParticles->tex);
+        drawer.drawInteractionRadius(mousePosX, mousePosY, INTERACTION_RADIUS, lastTicks);
 
         //Wait for OpenGL (SwapWindow has an implicit call to glFinish)
         SDL_GL_SwapWindow(window);
@@ -158,9 +162,9 @@ bool run(SDL_Window* window){
                     if(event.motion.state & SDL_BUTTON(SDL_BUTTON_LEFT)){
                         mouseSpeedX = (event.motion.xrel * 1.0 / SCREEN_SIZE) / (elapsedTicks / 1000.0);
                         mouseSpeedY = - (event.motion.yrel * 1.0 / SCREEN_SIZE) / (elapsedTicks / 1000.0);
-                        mousePosX = event.motion.x * 1.0 / SCREEN_SIZE;
-                        mousePosY = 1.0 - event.motion.y * 1.0 / SCREEN_SIZE;
                     }
+                    mousePosX = event.motion.x * 1.0 / SCREEN_SIZE;
+                    mousePosY = 1.0 - event.motion.y * 1.0 / SCREEN_SIZE;
                     break;
 
                 case SDL_QUIT:
@@ -231,6 +235,9 @@ int main(int argc, char *argv[]){
 
     renderer::Debug::init();
     renderer::Debug::makeSynchronous();
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
     if(!run(window)){
         return 1;

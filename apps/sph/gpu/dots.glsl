@@ -24,7 +24,7 @@ void main(){
                vec2 particlePos = vec2(texelFetchBuffer(particles, index + PARTICLE_POS_X).r, texelFetchBuffer(particles, index + PARTICLE_POS_Y).r);
                vec2 diff = particlePos - position;
                float dist = dot(diff, diff);
-               if(dist < 0.00001){
+               if(dist < 0.000002){
                    float weight = abs(texelFetchBuffer(particles, index + PARTICLE_PRESSURE).r / 10.0);
                    float normalizedWeight = 1.1 - 1 / (1 + weight);
                    outColor = vec4(vec3(normalizedWeight), 1.0);

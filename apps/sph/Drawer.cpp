@@ -28,6 +28,9 @@ Drawer::Drawer(int gridSize, int nParticles)
 
         _dotsFs.load(commonHeader + loadFile("apps/sph/gpu/dots.glsl"));
         _dotsProgram.attach(_vs).attach(_dotsFs).link().bindAttrib(0, "in_Position");
+
+        _radiusFs.load(commonHeader + loadFile("apps/sph/gpu/radius.glsl"));
+        _radiusProgram.attach(_vs).attach(_radiusFs).link().bindAttrib(0, "in_Position");
     }catch(std::string error){
         std::cerr << error << std::endl;
     }catch(const char* error){
@@ -36,14 +39,18 @@ Drawer::Drawer(int gridSize, int nParticles)
 }
 
 void Drawer::drawDots(ParticleGrid& grid, renderer::Texture& particles){
-    renderer::FrameBuffer::clearColor(0.0, 0.0, 0.0, 0.0);
-
     _dotsProgram.use().uni("particles", particles)
         .uni("gridSize", grid.getSizeTexture())
         .uni("gridDim", _gridSize)
         .uni("nParticles", _nParticles)
         .uni("gridOffset", grid.getOffsetTexture())
         .uni("gridArray", grid.getArrayTexture());
+
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+void Drawer::drawInteractionRadius(float x, float y, float r, int ticks){
+    _radiusProgram.use().uni("x", x).uni("y", y).uni("r", r).uni("time", float(ticks));
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }

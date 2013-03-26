@@ -16,6 +16,7 @@ class Drawer{
     public:
         Drawer(int gridSize, int nParticles);
         void drawDots(ParticleGrid& grid, renderer::Texture& particles);
+        void drawInteractionRadius(float x, float y, float r, int ticks);
 
     private:
         int _gridSize;
@@ -27,6 +28,9 @@ class Drawer{
 
         renderer::FragmentShader _dotsFs;
         renderer::ShaderProgram _dotsProgram;
+
+        renderer::FragmentShader _radiusFs;
+        renderer::ShaderProgram _radiusProgram;
 
 };
 
