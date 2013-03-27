@@ -3,8 +3,6 @@
 #include "Texture.hpp"
 #include "ActiveTextureManager.hpp"
 
-#include <iostream>
-
 namespace renderer{
 
 ActiveTextureManager& ActiveTextureManager::getInstance(ActiveManagerType type){
@@ -59,8 +57,6 @@ int ActiveTextureManager::activate(Texture* tex){
         glBindImageTexture(minUnit, *tex, 0, GL_FALSE, 0, GL_READ_WRITE,
                 static_cast<int>(tex->getFormat()));
     }
-
-    std::cout << tex << "    " << minUnit << "    " << static_cast<int>(_type) << std::endl;
 
     return minUnit;
 }
